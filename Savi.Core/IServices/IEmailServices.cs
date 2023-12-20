@@ -1,6 +1,12 @@
-﻿namespace Savi.Core.IServices
+﻿using MimeKit;
+using Savi.Model.Entities;
+
+namespace Savi.Core.IServices
 {
-    internal interface IEmailServices
+    public interface IEmailServices
     {
+        Task SendHtmlEmailAsync(MailRequest mailRequest);
+
+        void AttachFile(BodyBuilder builder, string filePath, string fileName)
     }
 }
