@@ -51,8 +51,7 @@ namespace Savi.Core.Services
                     throw new InvalidOperationException("Email sending failed.", ex);
                 }
             }
-
-            private void AttachFile(BodyBuilder builder, string filePath, string fileName)
+            public void AttachFile(BodyBuilder builder, string filePath, string fileName)
             {
                 if (System.IO.File.Exists(filePath))
                 {

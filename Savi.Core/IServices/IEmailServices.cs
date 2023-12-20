@@ -7,6 +7,6 @@ namespace Savi.Core.IServices
     {
         Task SendHtmlEmailAsync(MailRequest mailRequest);
 
-        void AttachFile(BodyBuilder builder, string filePath, string fileName)
+        void AttachFile(BodyBuilder builder, string filePath, string fileName);
     }
 }
