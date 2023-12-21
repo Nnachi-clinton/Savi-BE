@@ -1,3 +1,5 @@
+using Savi.Api.Configurations;
+
 namespace Savi.Api
 {
     public class Program
@@ -7,6 +9,8 @@ namespace Savi.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var configuration = builder.Configuration;
+            builder.Services.AddLoggingConfiguration(configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
