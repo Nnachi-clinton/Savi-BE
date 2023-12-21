@@ -5,18 +5,15 @@ using MimeKit;
 using Savi.Core.IServices;
 using Savi.Model.Entities;
 
-
 namespace Savi.Core.Services
 {
     public class EmailServices : IEmailServices
     {
             private readonly EmailSettings emailSettings;
-
             public EmailServices(IOptions<EmailSettings> options)
             {
                 this.emailSettings = options.Value;
             }
-
             public async Task SendHtmlEmailAsync(MailRequest mailRequest)
             {
                 var message = new MimeMessage
