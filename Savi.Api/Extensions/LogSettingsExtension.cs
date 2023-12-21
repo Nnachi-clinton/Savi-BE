@@ -14,9 +14,9 @@ namespace Savi.Api.Configurations
                 // Add NLog without explicit configuration loading
                 loggingBuilder.AddNLog();
 
-              
-                loggingBuilder.ClearProviders(); 
-                loggingBuilder.SetMinimumLevel(LogLevel.Trace); 
+
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(LogLevel.Trace);
             });
         }
     }
