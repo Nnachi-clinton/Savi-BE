@@ -7,10 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\Implementation\" />
     <Folder Include="UnitOfWork\" />
     <Folder Include="Seeder\" />
-    <Folder Include="Repositories\Interface\" />
   </ItemGroup>
 
   <ItemGroup>
