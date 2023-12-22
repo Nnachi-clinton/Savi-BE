@@ -11,7 +11,6 @@ namespace Savi.Core.Services
     {
         private readonly IGenericRepository<T> _repository;
         private readonly Cloudinary _cloudinary;
-
         public CloudinaryServices(IGenericRepository<T> repository, IConfiguration configuration)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -24,7 +23,6 @@ namespace Savi.Core.Services
                 cloudinarySettings.ApiSecret
             ));
         }
-
         public async Task<string> UploadImage(string entityId, IFormFile file)
         {
             var entity = _repository.GetById(entityId);
@@ -32,18 +30,13 @@ namespace Savi.Core.Services
             if (entity == null)
             {
                 return $"{typeof(T).Name} not found";
-            }
-          
+            }          
             var upload = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, file.OpenReadStream())
             };
-
             var uploadResult = await _cloudinary.UploadAsync(upload);
-
-
             _repository.Update(entity);
-
             try
             {
                 _repository.SaveChanges();
