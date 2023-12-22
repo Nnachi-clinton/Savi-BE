@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Savi.Model.Enums;
 
 namespace Savi.Model.Entities
 {
