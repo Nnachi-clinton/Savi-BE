@@ -1,3 +1,5 @@
+using Savi.Api.Configurations;
+
 using Savi.Api.Extensions;
 
 namespace Savi.Api
@@ -9,6 +11,8 @@ namespace Savi.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var configuration = builder.Configuration;
+            builder.Services.AddLoggingConfiguration(configuration);
             var configuration = builder.Configuration;
 
             builder.Services.AddControllers();
