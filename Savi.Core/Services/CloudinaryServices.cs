@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Savi.Core.IServices;
 using Savi.Model.Entities;
 using Microsoft.Extensions.Configuration;
+using Savi.Data.Repositories.Interface;
 
 namespace Savi.Core.Services
 {

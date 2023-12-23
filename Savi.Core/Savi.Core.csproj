@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Savi.Data\Savi.Data.csproj" />
     <ProjectReference Include="..\Savi.Model\Savi.Model.csproj" />
   </ItemGroup>
 
