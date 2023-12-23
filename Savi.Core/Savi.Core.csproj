@@ -8,8 +8,20 @@
 
   <ItemGroup>
     <Folder Include="DTO\" />
-    <Folder Include="IServices\" />
-    <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.24.0" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="MimeKit" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Savi.Data\Savi.Data.csproj" />
+    <ProjectReference Include="..\Savi.Model\Savi.Model.csproj" />
   </ItemGroup>
 
 </Project>
