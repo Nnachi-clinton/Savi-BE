@@ -26,7 +26,7 @@ namespace Savi.Core.Services
         }
         public async Task<string> UploadImage(string entityId, IFormFile file)
         {
-            var entity = _repository.GetById(entityId);
+            var entity = _repository.GetByIdAsync(entityId);
 
             if (entity == null)
             {
@@ -37,10 +37,10 @@ namespace Savi.Core.Services
                 File = new FileDescription(file.FileName, file.OpenReadStream())
             };
             var uploadResult = await _cloudinary.UploadAsync(upload);
-            _repository.Update(entity);
+            _repository.UpdateAsync(entity);
             try
             {
-                _repository.SaveChanges();
+                _repository.SaveChangesAsync();
                 return uploadResult.SecureUrl.AbsoluteUri;
             }
             catch (Exception ex)

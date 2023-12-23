@@ -1,6 +1,6 @@
 ﻿namespace Savi.Data.Repositories.Interface
 {
-    public class IUnitOfWork
+    public interface IUnitOfWork
     {
     }
 }
