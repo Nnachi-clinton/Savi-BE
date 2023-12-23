@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllGroupTransactionAsync(List<GroupTransaction> groupTransactions);
         void UpdateGroupTransactionAsync(GroupTransaction groupTransaction);
         List<GroupTransaction> FindGroupTransactions(Expression<Func<GroupTransaction, bool>> expression);
-        Task<GroupTransaction> GetGroupTransactionByIdAsync(string id);
+        GroupTransaction GetGroupTransactionByIdAsync(string id);
     }
 }

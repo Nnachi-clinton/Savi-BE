@@ -13,8 +13,7 @@ namespace Savi.Api
             // Add services to the container.
             var configuration = builder.Configuration;
             builder.Services.AddLoggingConfiguration(configuration);
-            var configuration = builder.Configuration;
-
+            
             builder.Services.AddControllers();
             builder.Services.AddMailService(configuration);
             builder.Services.AddDependencies(configuration);

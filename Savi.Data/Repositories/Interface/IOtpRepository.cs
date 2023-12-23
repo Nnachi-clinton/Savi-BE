@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllOtpAsync(List<Otp> otps);
         void UpdateOtpAsync(Otp otp);
         List<Otp> FindOtps(Expression<Func<Otp, bool>> expression);
-        Task<Otp> GetOtpByIdAsync(string id);
+        Otp GetOtpByIdAsync(string id);
     }
 }

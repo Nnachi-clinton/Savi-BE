@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllCardDetailAsync(List<CardDetail> cardDetails);
         void UpdateCardDetailAsync(CardDetail cardDetail);
         List<CardDetail> FindCardDetails(Expression<Func<CardDetail, bool>> expression);
-        Task<CardDetail> GetCardDetailByIdAsync(string id);
+        CardDetail GetCardDetailByIdAsync(string id);
     }
 }

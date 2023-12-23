@@ -4,7 +4,7 @@ namespace Savi.Data.Repositories.Interface
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T> GetByIdAsync(string id);
+        T GetByIdAsync(string id);
         List<T> GetAll();
         List<T> FindAsync(Expression<Func<T, bool>> expression);
         void AddAsync(T entity);

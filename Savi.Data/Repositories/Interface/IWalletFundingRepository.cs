@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllWalletFundingAsync(List<WalletFunding> walletFundings);
         void UpdateWalletFundingAsync(WalletFunding walletFunding);
         List<WalletFunding> FindWalletFundings(Expression<Func<WalletFunding, bool>> expression);
-        Task<WalletFunding> GetWalletFundingByIdAsync(string id);
+        WalletFunding GetWalletFundingByIdAsync(string id);
     }
 }

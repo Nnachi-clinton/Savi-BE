@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllGroupAsync(List<Group> groups);
         void UpdateGroupAsync(Group group);
         List<Group> FindGroups(Expression<Func<Group, bool>> expression);
-        Task<Group> GetGroupByIdAsync(string id);
+        Group GetGroupByIdAsync(string id);
     }
 }

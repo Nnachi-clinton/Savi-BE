@@ -31,9 +31,9 @@ namespace Savi.Data.Repositories.Implementation
             return FindAsync(expression);
         }
 
-        public async Task<AppUserTransaction> GetAppUserTransactionByIdAsync(string id)
+        public AppUserTransaction GetAppUserTransactionByIdAsync(string id)
         {
-            return await GetByIdAsync(id);
+            return  GetByIdAsync(id);
         }
 
         public List<AppUserTransaction> GetAppUserTransactionsAsync()

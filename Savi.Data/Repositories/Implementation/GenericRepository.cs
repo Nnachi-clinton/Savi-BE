@@ -44,9 +44,9 @@ namespace Savi.Data.Repositories.Implementation
             return _context.Set<T>().ToList();
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public T GetByIdAsync(string id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return _context.Set<T>().Find(id);
         }
 
         public async void SaveChangesAsync()
