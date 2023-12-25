@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.PowerBI.Api.Models;
 using System;
 using System.Collections.Generic;
