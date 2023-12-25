@@ -11,12 +11,13 @@ namespace Savi.Data.Context
         {
         }
 
+		//public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppUserTransaction> AppUserTransactions { get; set; }
         public DbSet<CardDetail> CardDetails { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupTransaction> GroupsTransaction { get; set; }
         public DbSet<Kyc> Kycs { get; set; }
-        public DbSet<Otp> Otps { get; set; }
+        //public DbSet<Otp> Otps { get; set; }
         public DbSet<Saving> Savings { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<WalletFunding> WalletFundings { get; set; }

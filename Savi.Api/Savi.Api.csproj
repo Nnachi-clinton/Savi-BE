@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Savi.Model\Savi.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Savi.Data\Savi.Data.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Savi.Data.Seeder
 {
-    public class Seeder
+	public class Seeder
     {
         public static void SeedRolesAndSuperAdmin(IServiceProvider serviceProvider)
         {
