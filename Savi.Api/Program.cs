@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Savi.Api.Configurations;
+using Savi.Data.Context;
+
+using Savi.Api.Extensions;
 
 using Savi.Api.Extensions;
 
@@ -21,7 +25,11 @@ namespace Savi.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+   //         builder.Services.AddDbContext<SaviDbContext>(options =>
+			//options.UseSqlServer(configuration.GetConnectionString("SaviSavings")));
+
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

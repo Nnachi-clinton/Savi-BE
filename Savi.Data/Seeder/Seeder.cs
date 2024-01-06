@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.PowerBI.Api.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Savi.Data.Seeder
 {
-    public class Seeder
+	public class Seeder
     {
         public static void SeedRolesAndSuperAdmin(IServiceProvider serviceProvider)
         {
