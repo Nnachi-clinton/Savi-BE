@@ -30,10 +30,9 @@ namespace Savi.Data.Repositories.Implementation
         {
             return FindAsync(expression);
         }
-
-        public CardDetail GetCardDetailByIdAsync(string id)
+        public async Task<CardDetail> GetCardDetailByIdAsync(string id)
         {
-            return  GetByIdAsync(id);
+            return  await GetByIdAsync(id);
         }
 
         public List<CardDetail> GetCardDetailsAsync()

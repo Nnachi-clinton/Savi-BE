@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllSavingAsync(List<Saving> savings);
         void UpdateSavingAsync(Saving saving);
         List<Saving> FindSavings(Expression<Func<Saving, bool>> expression);
-        Saving GetSavingByIdAsync(string id);
+        Task<Saving> GetSavingByIdAsync(string id);
     }
 }

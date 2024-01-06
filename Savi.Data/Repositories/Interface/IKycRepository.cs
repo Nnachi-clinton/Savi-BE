@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllKycAsync(List<Kyc> kycs);
         void UpdateKycAsync(Kyc kyc);
         List<Kyc> FindKycs(Expression<Func<Kyc, bool>> expression);
-        Kyc GetKycByIdAsync(string id);
+        Task<Kyc> GetKycByIdAsync(string id);
     }
 }

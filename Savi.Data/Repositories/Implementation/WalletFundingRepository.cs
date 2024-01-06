@@ -31,9 +31,9 @@ namespace Savi.Data.Repositories.Implementation
             return FindAsync(expression).ToList();
         }
 
-        public WalletFunding GetWalletFundingByIdAsync(string id)
+        public async Task<WalletFunding> GetWalletFundingByIdAsync(string id)
         {
-            return GetByIdAsync(id);
+            return await GetByIdAsync(id);
         }
 
         public List<WalletFunding> GetWalletFundingsAsync()

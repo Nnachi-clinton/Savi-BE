@@ -43,8 +43,11 @@ namespace Savi.Data.Repositories.Implementation
         {
             return _context.Set<T>().ToList();
         }
-
-        public T GetByIdAsync(string id)
+        public async Task<T> GetByIdAsync(string id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+        public T GetById(string id)
         {
             return _context.Set<T>().Find(id);
         }
@@ -58,5 +61,7 @@ namespace Savi.Data.Repositories.Implementation
         {
             _context.Set<T>().Update(entity);
         }
+
+
     }
 }
