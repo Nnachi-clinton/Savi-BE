@@ -17,16 +17,19 @@ namespace Savi.Data.Repositories.Implementation
         public async void AddAsync(T entity)
         {
            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteAllAsync(List<T> entities)
+        public async void DeleteAllAsync(List<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteAsync(T entity)
+        public async void DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(Expression<Func<T, bool>> expression)
@@ -60,6 +63,7 @@ namespace Savi.Data.Repositories.Implementation
         public void UpdateAsync(T entity)
         {
             _context.Set<T>().Update(entity);
+
         }
 
 
