@@ -5,6 +5,7 @@ using Savi.Core.IServices;
 using Savi.Model.Entities;
 using Microsoft.Extensions.Configuration;
 using Savi.Data.Repositories.Interface;
+using Microsoft.Extensions.Logging;
 
 namespace Savi.Core.Services
 {
@@ -12,6 +13,7 @@ namespace Savi.Core.Services
     {
         private readonly IGenericRepository<T> _repository;
         private readonly Cloudinary _cloudinary;
+        private readonly ILogger<T> _logger;
         public CloudinaryServices(IGenericRepository<T> repository, IConfiguration configuration)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -26,7 +28,7 @@ namespace Savi.Core.Services
         }
         public async Task<string> UploadImage(string entityId, IFormFile file)
         {
-            var entity = _repository.GetByIdAsync(entityId);
+            var entity = _repository.GetById(entityId);
 
             if (entity == null)
             {
@@ -45,7 +47,7 @@ namespace Savi.Core.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                _logger.LogError("Database update failed: {Message}", ex.Message);
                 return "Database update error occurred";
             }
         }

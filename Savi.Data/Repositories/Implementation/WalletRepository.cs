@@ -30,10 +30,9 @@ namespace Savi.Data.Repositories.Implementation
         {
             return FindAsync(expression);
         }
-
-        public Wallet GetWalletByIdAsync(string id)
+        public async Task<Wallet> GetWalletByIdAsync(string id)
         {
-            return  GetByIdAsync(id);
+            return await GetByIdAsync(id);
         }
 
         public List<Wallet> GetWalletsAsync()

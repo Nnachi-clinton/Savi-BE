@@ -30,10 +30,9 @@ namespace Savi.Data.Repositories.Implementation
         {
             return FindAsync(expression);
         }
-
-        public Saving GetSavingByIdAsync(string id)
+        public async Task<Saving> GetSavingByIdAsync(string id)
         {
-            return GetByIdAsync(id);
+            return await GetByIdAsync(id);
         }
 
         public List<Saving> GetSavingsAsync()

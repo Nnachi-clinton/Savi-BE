@@ -11,6 +11,6 @@ namespace Savi.Data.Repositories.Interface
         void DeleteAllAppUserTransactionAsync(List<AppUserTransaction> appUserTransactions);
         void UpdateAppUserTransactionAsync(AppUserTransaction appUserTransaction);
         List<AppUserTransaction> FindAppUserTransactions(Expression<Func<AppUserTransaction, bool>> expression);
-        AppUserTransaction GetAppUserTransactionByIdAsync(string id);
+        Task<AppUserTransaction> GetAppUserTransactionByIdAsync(string id);
     }
 }

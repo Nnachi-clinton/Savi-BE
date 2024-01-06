@@ -31,9 +31,9 @@ namespace Savi.Data.Repositories.Implementation
             return FindAsync(expression).ToList();
         }
 
-        public Otp GetOtpByIdAsync(string id)
+        public async Task<Otp> GetOtpByIdAsync(string id)
         {
-            return GetByIdAsync(id);
+            return await GetByIdAsync(id);
         }
 
         public List<Otp> GetOtpsAsync()

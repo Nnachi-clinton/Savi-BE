@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Savi.Api.Configurations;
-using Savi.Data.Context;
-
 using Savi.Api.Extensions;
 
 namespace Savi.Api

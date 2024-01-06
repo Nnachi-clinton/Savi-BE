@@ -1,15 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.PowerBI.Api.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Savi.Model.Entities;
 
 namespace Savi.Data.Seeder
 {
-	public class Seeder
+    public class Seeder
     {
         public static void SeedRolesAndSuperAdmin(IServiceProvider serviceProvider)
         {

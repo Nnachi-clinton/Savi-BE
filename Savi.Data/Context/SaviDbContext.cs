@@ -11,7 +11,6 @@ namespace Savi.Data.Context
         {
         }
 
-		//public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppUserTransaction> AppUserTransactions { get; set; }
         public DbSet<CardDetail> CardDetails { get; set; }
         public DbSet<Group> Groups { get; set; }

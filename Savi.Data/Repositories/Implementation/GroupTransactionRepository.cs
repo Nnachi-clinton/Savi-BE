@@ -30,10 +30,9 @@ namespace Savi.Data.Repositories.Implementation
         {
             return FindAsync(expression);
         }
-
-        public GroupTransaction GetGroupTransactionByIdAsync(string id)
+        public async Task<GroupTransaction> GetGroupTransactionByIdAsync(string id)
         {
-            return GetByIdAsync(id);
+            return await GetByIdAsync(id);
         }
 
         public List<GroupTransaction> GetGroupTransactionsAsync()
