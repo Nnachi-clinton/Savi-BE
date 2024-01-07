@@ -1,5 +1,8 @@
-﻿using Savi.Core.IServices;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Savi.Core.IServices;
 using Savi.Core.Services;
+using Savi.Data.Context;
 using Savi.Data.Repositories.Interface;
 using Savi.Data.UnitOfWork;
 using Savi.Model.Entities;
@@ -19,6 +22,8 @@ namespace Savi.Api.Extensions
             services.AddSingleton(cloudinarySettings);
             services.AddScoped(typeof(ICloudinaryServices<>), typeof(CloudinaryServices<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddDbContext<SaviDbContext>(options =>
+            options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
         }
     }
 }

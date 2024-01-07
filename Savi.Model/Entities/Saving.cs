@@ -12,7 +12,13 @@ namespace Savi.Model.Entities
         public string Purpose { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public DateTime TargetDate { get; set; }
+        public DateTime WithdrawalDate { get; set; }
+        public DateTime NextRuntime { get; set; }
+        public string TargetName { get; set; }
+        public decimal TargetAmount { get; set; }
+
         public decimal AmountToAdd { get; set; }
         public FundFrequency FundFrequency { get; set; }
 

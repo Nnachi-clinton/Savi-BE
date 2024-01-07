@@ -15,6 +15,15 @@ namespace Savi.Data.Repositories.Implementation
         {
            await AddAsync(saving);
         }
+        public async Task<bool> CreateSavings(Saving saving)
+        {
+            var savings =  await CreateAsync(saving);
+            if (!savings)
+            {
+                return false;
+            }
+            return true;
+        }
 
         public async Task DeleteAllSavingAsync(List<Saving> savings)
         {

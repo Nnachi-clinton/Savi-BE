@@ -14,9 +14,10 @@ namespace Savi.Core.Services
         private readonly IGenericRepository<T> _repository;
         private readonly Cloudinary _cloudinary;
         private readonly ILogger<T> _logger;
-        public CloudinaryServices(IGenericRepository<T> repository, IConfiguration configuration)
+        public CloudinaryServices(IGenericRepository<T> repository, IConfiguration configuration, ILogger<T> logger)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _logger=logger ?? throw new ArgumentNullException(nameof(logger));
 
             var cloudinarySettings = configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>(); 
 

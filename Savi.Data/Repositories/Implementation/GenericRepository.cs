@@ -55,6 +55,18 @@ namespace Savi.Data.Repositories.Implementation
             return _context.Set<T>().Find(id);
         }
 
+        public async Task<bool> CreateAsync(T entity)
+        {
+
+            await _context.Set<T>().AddAsync(entity);
+            var saveTarget = await _context.SaveChangesAsync();
+            if (saveTarget > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
