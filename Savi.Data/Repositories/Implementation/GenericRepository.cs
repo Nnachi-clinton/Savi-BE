@@ -14,19 +14,19 @@ namespace Savi.Data.Repositories.Implementation
             _context = context;
         }
 
-        public async void AddAsync(T entity)
+        public async Task AddAsync(T entity)
         {
            await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async void DeleteAllAsync(List<T> entities)
+        public async Task DeleteAllAsync(List<T> entities)
         {
             _context.Set<T>().RemoveRange(entities);
             await _context.SaveChangesAsync();
         }
 
-        public async void DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
@@ -55,7 +55,7 @@ namespace Savi.Data.Repositories.Implementation
             return _context.Set<T>().Find(id);
         }
 
-        public async void SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }

@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddCardDetailAsync(CardDetail cardDetail)
+        public async Task AddCardDetailAsync(CardDetail cardDetail)
         {
-            AddAsync(cardDetail);
+            await AddAsync(cardDetail);
         }
 
-        public void DeleteAllCardDetailAsync(List<CardDetail> cardDetails)
+        public async Task DeleteAllCardDetailAsync(List<CardDetail> cardDetails)
         {
-            DeleteAllAsync(cardDetails);
+           await DeleteAllAsync(cardDetails);
         }
 
-        public void DeleteCardDetailAsync(CardDetail cardDetail)
+        public async Task DeleteCardDetailAsync(CardDetail cardDetail)
         {
-            DeleteAsync(cardDetail);
+            await DeleteAsync(cardDetail);
         }
 
         public List<CardDetail> FindCardDetails(Expression<Func<CardDetail, bool>> expression)

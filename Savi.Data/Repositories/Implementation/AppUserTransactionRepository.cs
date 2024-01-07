@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddAppUserTransactionAsync(AppUserTransaction appUserTransaction)
+        public async Task AddAppUserTransactionAsync(AppUserTransaction appUserTransaction)
         {
-            AddAsync(appUserTransaction);
+            await AddAsync(appUserTransaction);
         }
 
-        public void DeleteAllAppUserTransactionAsync(List<AppUserTransaction> appUserTransactions)
+        public async Task DeleteAllAppUserTransactionAsync(List<AppUserTransaction> appUserTransactions)
         {
-           DeleteAllAsync(appUserTransactions);
+            await DeleteAllAsync(appUserTransactions);
         }
 
-        public void DeleteAppUserTransactionAsync(AppUserTransaction appUserTransaction)
+        public async Task DeleteAppUserTransactionAsync(AppUserTransaction appUserTransaction)
         {
-            DeleteAsync(appUserTransaction);
+            await DeleteAsync(appUserTransaction);
         }
 
         public List<AppUserTransaction> FindAppUserTransactions(Expression<Func<AppUserTransaction, bool>> expression)

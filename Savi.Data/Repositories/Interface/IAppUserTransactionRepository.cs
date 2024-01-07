@@ -6,9 +6,9 @@ namespace Savi.Data.Repositories.Interface
     public interface IAppUserTransactionRepository : IGenericRepository<AppUserTransaction>
     {
         List<AppUserTransaction> GetAppUserTransactionsAsync();
-        void AddAppUserTransactionAsync(AppUserTransaction appUserTransaction);
-        void DeleteAppUserTransactionAsync(AppUserTransaction appUserTransaction);
-        void DeleteAllAppUserTransactionAsync(List<AppUserTransaction> appUserTransactions);
+        Task AddAppUserTransactionAsync(AppUserTransaction appUserTransaction);
+        Task DeleteAppUserTransactionAsync(AppUserTransaction appUserTransaction);
+        Task DeleteAllAppUserTransactionAsync(List<AppUserTransaction> appUserTransactions);
         void UpdateAppUserTransactionAsync(AppUserTransaction appUserTransaction);
         List<AppUserTransaction> FindAppUserTransactions(Expression<Func<AppUserTransaction, bool>> expression);
         Task<AppUserTransaction> GetAppUserTransactionByIdAsync(string id);

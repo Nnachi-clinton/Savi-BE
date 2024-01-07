@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddGroupTransactionAsync(GroupTransaction groupTransaction)
+        public async Task AddGroupTransactionAsync(GroupTransaction groupTransaction)
         {
-            AddAsync(groupTransaction);
+            await AddAsync(groupTransaction);
         }
 
-        public void DeleteAllGroupTransactionAsync(List<GroupTransaction> groupTransactions)
+        public async Task DeleteAllGroupTransactionAsync(List<GroupTransaction> groupTransactions)
         {
-            DeleteAllAsync(groupTransactions);
+            await DeleteAllAsync(groupTransactions);
         }
 
-        public void DeleteGroupTransactionAsync(GroupTransaction groupTransaction)
+        public async Task DeleteGroupTransactionAsync(GroupTransaction groupTransaction)
         {
-            DeleteAsync(groupTransaction);
+           await DeleteAsync(groupTransaction);
         }
 
         public List<GroupTransaction> FindGroupTransactions(Expression<Func<GroupTransaction, bool>> expression)

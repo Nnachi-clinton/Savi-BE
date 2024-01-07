@@ -42,7 +42,7 @@ namespace Savi.Core.Services
             _repository.UpdateAsync(entity);
             try
             {
-                _repository.SaveChangesAsync();
+                await _repository.SaveChangesAsync();
                 return uploadResult.SecureUrl.AbsoluteUri;
             }
             catch (Exception ex)

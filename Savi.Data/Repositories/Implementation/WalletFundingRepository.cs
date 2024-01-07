@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddWalletFundingAsync(WalletFunding walletFunding)
+        public async Task AddWalletFundingAsync(WalletFunding walletFunding)
         {
-            AddAsync(walletFunding);
+           await AddAsync(walletFunding);
         }
 
-        public void DeleteAllWalletFundingAsync(List<WalletFunding> walletFundings)
+        public async Task DeleteAllWalletFundingAsync(List<WalletFunding> walletFundings)
         {
-            DeleteAllAsync(walletFundings);
+            await DeleteAllAsync(walletFundings);
         }
 
-        public void DeleteWalletFundingAsync(WalletFunding walletFunding)
+        public async Task DeleteWalletFundingAsync(WalletFunding walletFunding)
         {
-            DeleteAsync(walletFunding);
+           await DeleteAsync(walletFunding);
         }
 
         public List<WalletFunding> FindWalletFundings(Expression<Func<WalletFunding, bool>> expression)
