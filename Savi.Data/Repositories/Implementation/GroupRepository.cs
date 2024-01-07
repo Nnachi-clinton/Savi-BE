@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddGroupAsync(Group group)
+        public async Task AddGroupAsync(Group group)
         {
-            AddAsync(group);
+            await AddAsync(group);
         }
 
-        public void DeleteAllGroupAsync(List<Group> groups)
+        public async Task DeleteAllGroupAsync(List<Group> groups)
         {
-            DeleteAllAsync(groups);
+           await DeleteAllAsync(groups);
         }
 
-        public void DeleteGroupAsync(Group group)
+        public async Task DeleteGroupAsync(Group group)
         {
-            DeleteAsync(group);
+           await DeleteAsync(group);
         }
 
         public List<Group> FindGroups(Expression<Func<Group, bool>> expression)

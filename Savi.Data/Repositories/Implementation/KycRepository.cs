@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddKycAsync(Kyc kyc)
+        public async Task AddKycAsync(Kyc kyc)
         {
-            AddAsync(kyc);
+            await AddAsync(kyc);
         }
 
-        public void DeleteAllKycAsync(List<Kyc> kycs)
+        public async Task DeleteAllKycAsync(List<Kyc> kycs)
         {
-            DeleteAllAsync(kycs);
+           await DeleteAllAsync(kycs);
         }
 
-        public void DeleteKycAsync(Kyc kyc)
+        public async Task DeleteKycAsync(Kyc kyc)
         {
-            DeleteAsync(kyc);
+           await DeleteAsync(kyc);
         }
 
         public List<Kyc> FindKycs(Expression<Func<Kyc, bool>> expression)

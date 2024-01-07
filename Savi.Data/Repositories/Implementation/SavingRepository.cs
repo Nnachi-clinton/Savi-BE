@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddSavingAsync(Saving saving)
+        public async Task AddSavingAsync(Saving saving)
         {
-            AddAsync(saving);
+           await AddAsync(saving);
         }
 
-        public void DeleteAllSavingAsync(List<Saving> savings)
+        public async Task DeleteAllSavingAsync(List<Saving> savings)
         {
-            DeleteAllAsync(savings);
+           await DeleteAllAsync(savings);
         }
 
-        public void DeleteSavingAsync(Saving saving)
+        public async Task DeleteSavingAsync(Saving saving)
         {
-            DeleteAsync(saving);
+            await DeleteAsync(saving);
         }
 
         public List<Saving> FindSavings(Expression<Func<Saving, bool>> expression)

@@ -7,12 +7,12 @@ namespace Savi.Data.Repositories.Interface
         Task<T> GetByIdAsync(string id);
         List<T> GetAll();
         List<T> FindAsync(Expression<Func<T, bool>> expression);
-        void AddAsync(T entity);
+        Task AddAsync(T entity);
         void UpdateAsync(T entity);
-        void DeleteAsync(T entity);
-        void DeleteAllAsync(List<T> entities);
+        Task DeleteAsync(T entity);
+        Task DeleteAllAsync(List<T> entities);
         Task<bool> ExistsAsync(Expression<Func<T, bool>> expression);
-        void SaveChangesAsync();
+        Task SaveChangesAsync();
         T GetById(string id);
     }
 }

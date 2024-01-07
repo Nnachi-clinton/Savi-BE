@@ -6,9 +6,9 @@ namespace Savi.Data.Repositories.Interface
     public interface ICardDetailsRepository : IGenericRepository<CardDetail>
     {
         List<CardDetail> GetCardDetailsAsync();
-        void AddCardDetailAsync(CardDetail cardDetail);
-        void DeleteCardDetailAsync(CardDetail cardDetail);
-        void DeleteAllCardDetailAsync(List<CardDetail> cardDetails);
+        Task AddCardDetailAsync(CardDetail cardDetail);
+        Task DeleteCardDetailAsync(CardDetail cardDetail);
+        Task DeleteAllCardDetailAsync(List<CardDetail> cardDetails);
         void UpdateCardDetailAsync(CardDetail cardDetail);
         List<CardDetail> FindCardDetails(Expression<Func<CardDetail, bool>> expression);
         Task<CardDetail> GetCardDetailByIdAsync(string id);

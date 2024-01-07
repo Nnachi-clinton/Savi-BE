@@ -6,9 +6,9 @@ namespace Savi.Data.Repositories.Interface
     public interface IWalletFundingRepository : IGenericRepository<WalletFunding>
     {
         List<WalletFunding> GetWalletFundingsAsync();
-        void AddWalletFundingAsync(WalletFunding walletFunding);
-        void DeleteWalletFundingAsync(WalletFunding walletFunding);
-        void DeleteAllWalletFundingAsync(List<WalletFunding> walletFundings);
+        Task AddWalletFundingAsync(WalletFunding walletFunding);
+        Task DeleteWalletFundingAsync(WalletFunding walletFunding);
+        Task DeleteAllWalletFundingAsync(List<WalletFunding> walletFundings);
         void UpdateWalletFundingAsync(WalletFunding walletFunding);
         List<WalletFunding> FindWalletFundings(Expression<Func<WalletFunding, bool>> expression);
         Task<WalletFunding> GetWalletFundingByIdAsync(string id);

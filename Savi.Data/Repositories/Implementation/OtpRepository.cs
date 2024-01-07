@@ -11,19 +11,19 @@ namespace Savi.Data.Repositories.Implementation
         {
         }
 
-        public void AddOtpAsync(Otp otp)
+        public async Task AddOtpAsync(Otp otp)
         {
-            AddAsync(otp);
+            await AddAsync(otp);
         }
 
-        public void DeleteAllOtpAsync(List<Otp> otps)
+        public async Task DeleteAllOtpAsync(List<Otp> otps)
         {
-            DeleteAllAsync(otps);
+           await DeleteAllAsync(otps);
         }
 
-        public void DeleteOtpAsync(Otp otp)
+        public async Task DeleteOtpAsync(Otp otp)
         {
-            DeleteAsync(otp);
+           await DeleteAsync(otp);
         }
 
         public List<Otp> FindOtps(Expression<Func<Otp, bool>> expression)
