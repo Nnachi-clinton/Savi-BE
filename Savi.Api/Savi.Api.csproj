@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Savi.Core\Savi.Core.csproj" />
     <ProjectReference Include="..\Savi.Data\Savi.Data.csproj" />
     <ProjectReference Include="..\Savi.Model\Savi.Model.csproj" />
