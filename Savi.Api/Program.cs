@@ -30,10 +30,11 @@ namespace Savi.Api
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI( c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Savi v1"));
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
