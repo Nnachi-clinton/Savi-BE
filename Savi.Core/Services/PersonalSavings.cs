@@ -26,6 +26,13 @@ namespace Savi.Core.Services
 
                     var x = saving.TargetAmount;
                     var y = saving.AmountToAdd;
+                    if (x <= 0 || y <= 0)
+                    {
+                        response.DisplayMessage = "Failed";
+                        response.Result = "TargetAmount or AmountToAdd cannot be less than or equal to zero";
+                        response.StatusCode = 400;
+                        return response;
+                    }
                     var z = x / y;
                     saving.EndDate = DateTime.Now.AddDays(((double)z));
                     saving.WithdrawalDate = saving.EndDate.AddDays(1);
@@ -48,6 +55,13 @@ namespace Savi.Core.Services
                     saving.NextRuntime = DateTime.Today;
                     var x = saving.TargetAmount;
                     var y = saving.AmountToAdd;
+                    if (x <= 0 || y <= 0)
+                    {
+                        response.DisplayMessage = "Failed";
+                        response.Result = "TargetAmount or AmountToAdd cannot be less than or equal to zero";
+                        response.StatusCode = 400;
+                        return response;
+                    }
                     var z = (x / y) * 6;
                     saving.EndDate = DateTime.Now.AddDays(((double)z));
                     saving.WithdrawalDate = saving.EndDate.AddDays(1);
@@ -70,6 +84,13 @@ namespace Savi.Core.Services
                     saving.NextRuntime = DateTime.Today;
                     var x = saving.TargetAmount;
                     var y = saving.AmountToAdd;
+                    if (x <= 0 || y <= 0)
+                    {
+                        response.DisplayMessage = "Failed";
+                        response.Result = "TargetAmount or AmountToAdd cannot be less than or equal to zero";
+                        response.StatusCode = 400;
+                        return response;
+                    }
                     var z = (x / y) * 30;
                     saving.EndDate = DateTime.Now.AddDays(((double)z));
                     saving.WithdrawalDate = saving.EndDate.AddDays(1);
