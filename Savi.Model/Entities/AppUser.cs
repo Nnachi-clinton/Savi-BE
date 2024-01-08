@@ -11,7 +11,9 @@ namespace Savi.Model.Entities
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
-     
+        public string PasswordResetToken { get; set; }
+        public DateTime? ResetTokenExpires { get; set; }
+
         public ICollection<Saving> Savings { get; set; }
         public ICollection<CardDetail> CardDetails { get; set; }
         public ICollection<AppUserTransaction> AppUserTransactions { get; set; }

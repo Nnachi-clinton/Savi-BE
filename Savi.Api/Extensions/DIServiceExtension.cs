@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Savi.Core.IServices;
 using Savi.Core.Services;
 using Savi.Data.Context;
@@ -24,6 +25,11 @@ namespace Savi.Api.Extensions
             services.AddSingleton(cloudinarySettings);
             services.AddScoped(typeof(ICloudinaryServices<>), typeof(CloudinaryServices<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddIdentity<AppUser, IdentityRole>()
+        .AddEntityFrameworkStores<SaviDbContext>()
+        .AddDefaultTokenProviders();
+            
             services.AddDbContext<SaviDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPersonalSavings, PersonalSavings>();

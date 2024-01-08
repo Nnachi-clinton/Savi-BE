@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Savi.Data.Context;
 
@@ -11,9 +12,10 @@ using Savi.Data.Context;
 namespace Savi.Data.Migrations
 {
     [DbContext(typeof(SaviDbContext))]
-    partial class SaviDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240107165846_firstMigration")]
+    partial class firstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -499,9 +501,6 @@ namespace Savi.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("FundFrequency")
                         .HasColumnType("int");
 
@@ -514,32 +513,20 @@ namespace Savi.Data.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NextRuntime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Purpose")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("TargetAmount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime>("TargetDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("TargetName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("WalletId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("WithdrawalDate")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
