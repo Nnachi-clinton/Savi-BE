@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.33.0" />
     <PackageReference Include="NLog" Version="5.2.7" />
@@ -22,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Savi.Data\Savi.Data.csproj" />
+    <ProjectReference Include="..\Savi.Utility\Savi.Utility.csproj" />
   </ItemGroup>
 
 </Project>

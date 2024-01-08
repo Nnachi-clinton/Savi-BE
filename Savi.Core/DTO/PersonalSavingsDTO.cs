@@ -1,0 +1,15 @@
+﻿using Savi.Model.Enums;
+
+namespace Savi.Core.DTO
+{
+    public class PersonalSavingsDTO
+    {
+        public DateTime EndDate { get; set; }
+        public DateTime WithdrawalDate { get; set; }
+        public decimal AmountToAdd { get; set; }
+        public DateTime NextRuntime { get; set; }
+        public decimal TargetAmount { get; set; }
+        public FundFrequency FundFrequency { get; set; }
+        public string TargetName { get; set; }
+    }
+}

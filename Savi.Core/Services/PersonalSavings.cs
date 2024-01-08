@@ -23,11 +23,13 @@ namespace Savi.Core.Services
                 if (saving.FundFrequency== FundFrequency.Daily)
                 {
                     saving.NextRuntime = DateTime.Today;
+
                     var x = saving.TargetAmount;
-                    var y = saving.GoalAmount;
+                    var y = saving.AmountToAdd;
                     var z = x / y;
                     saving.EndDate = DateTime.Now.AddDays(((double)z));
                     saving.WithdrawalDate = saving.EndDate.AddDays(1);
+                    saving.TargetName = saving.TargetName;
                     var newTarget = await _savingRepository.CreateSavings(saving);
                     if (newTarget)
                     {
@@ -45,10 +47,11 @@ namespace Savi.Core.Services
                 {
                     saving.NextRuntime = DateTime.Today;
                     var x = saving.TargetAmount;
-                    var y = saving.GoalAmount;
+                    var y = saving.AmountToAdd;
                     var z = (x / y) * 6;
                     saving.EndDate = DateTime.Now.AddDays(((double)z));
                     saving.WithdrawalDate = saving.EndDate.AddDays(1);
+                    saving.TargetName = saving.TargetName;
                     var newTarget = await _savingRepository.CreateSavings(saving);
                     if (newTarget)
                     {
@@ -66,10 +69,11 @@ namespace Savi.Core.Services
                 {
                     saving.NextRuntime = DateTime.Today;
                     var x = saving.TargetAmount;
-                    var y = saving.GoalAmount;
+                    var y = saving.AmountToAdd;
                     var z = (x / y) * 30;
                     saving.EndDate = DateTime.Now.AddDays(((double)z));
                     saving.WithdrawalDate = saving.EndDate.AddDays(1);
+                    saving.TargetName = saving.TargetName;
                     var newTarget = await _savingRepository.CreateSavings(saving);
                     if (newTarget)
                     {

@@ -3,9 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Savi.Core.IServices;
 using Savi.Core.Services;
 using Savi.Data.Context;
+using Savi.Data.Repositories.Implementation;
 using Savi.Data.Repositories.Interface;
 using Savi.Data.UnitOfWork;
 using Savi.Model.Entities;
+using Savi.Utility.AutoMapperProfile;
 
 namespace Savi.Api.Extensions
 {
@@ -24,6 +26,9 @@ namespace Savi.Api.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<SaviDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IPersonalSavings, PersonalSavings>();
+            services.AddScoped<ISavingRepository, SavingRepository>();
+            services.AddAutoMapper(typeof(MapperProfile));
         }
     }
 }
