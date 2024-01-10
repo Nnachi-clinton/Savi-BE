@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Savi.Core.DTO; 
 using Savi.Core.IServices;
@@ -17,6 +19,16 @@ namespace Savi.Api.Controllers
         {
             _authenticationService = authenticationService;
             _userManager = userManager;
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(AppUserLoginDTO loginDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<string>(false, "Invalid model state.", 400, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+            }
+            return Ok(await _authenticationService.LoginAsync(loginDTO));
         }
 
         [HttpPost("forgot-password")]

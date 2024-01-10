@@ -24,8 +24,8 @@ namespace Savi.Api.Extensions
             config.GetSection("CloudinarySettings").Bind(cloudinarySettings);
             services.AddSingleton(cloudinarySettings);
             services.AddScoped(typeof(ICloudinaryServices<>), typeof(CloudinaryServices<>));
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();   
             services.AddIdentity<AppUser, IdentityRole>()
         .AddEntityFrameworkStores<SaviDbContext>()
         .AddDefaultTokenProviders();

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Model;
 using Savi.Model.Entities;
@@ -19,42 +20,58 @@ namespace Savi.Core.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly EmailServices _emailServices;
         private readonly EmailSettings _emailSettings;
-        private readonly ILogger _logger;
+        private readonly ILogger _logger;       
+        private readonly SignInManager<AppUser> _signInManager;     
 
-        public AuthenticationService(IConfiguration config, UserManager<AppUser> userManager, IOptions<EmailSettings> emailSettings, ILogger<AuthenticationService> logger)
+        public AuthenticationService(IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IOptions<EmailSettings> emailSettings, ILogger<AuthenticationService> logger)        
         {
             _config = config;
             _userManager = userManager;
             _emailServices = new EmailServices(emailSettings);
             _emailSettings = emailSettings.Value;
-            _logger = logger;
+            _logger = logger;          
+            _signInManager = signInManager;           
         }
-        private string GenerateJwtToken(AppUser contact, string roles)
+        public async Task<ApiResponse<string>> LoginAsync(AppUserLoginDTO loginDTO)
         {
-            var jwtSettings = _config.GetSection("JwtSettings:Secret").Value;
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
+            try
             {
-                new Claim(JwtRegisteredClaimNames.Sub, contact.FirstName),
-                new Claim(JwtRegisteredClaimNames.Email, contact.Email),
-                new Claim(JwtRegisteredClaimNames.NameId, contact.Id),
-                new Claim(ClaimTypes.Role, roles)
+                var user = await _userManager.FindByEmailAsync(loginDTO.Email);
+                if (user == null)
+                    return ApiResponse<string>.Failed(false, "Invalid Email or password.", 400, new List<string> { "Invalid Email or password." });
+                if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
+                {
+                    var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-
-            var token = new JwtSecurityToken(
-                //issuer: _config.GetValue<string>("JwtSettings:ValidIssuer"),
-                //audience: _config.GetValue<string>("JwtSettings:ValidAudience"),
-                issuer: null,
-                audience: null,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(int.Parse(_config.GetSection("JwtSettings:AccessTokenExpiration").Value)),
-                signingCredentials: credentials
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                    var jwtToken = GetToken(authClaims);   
+                    return ApiResponse<string>.Success(new JwtSecurityTokenHandler().WriteToken(jwtToken), "Login successful", 200);
+                }            
+                return ApiResponse<string>.Failed(false, "Invalid Email or password.", 400, new List<string> { "Invalid Email or password." });
+            }
+            catch (Exception ex)
+            {                
+                return ApiResponse<string>.Failed(false, "An unexpected error occurred during login.", 500, new List<string> { ex.Message });
+            }
         }
+
+        public JwtSecurityToken GetToken(List<Claim> authClaims)
+        {
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
+            var token = new JwtSecurityToken(
+                issuer: _config["JWT:ValidIssuer"],
+                audience: _config["JWT:ValidAudience"],
+                expires: DateTime.Now.AddDays(2),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+            return token;
+        }
+
+            
+      
         public async Task<ApiResponse<string>> ForgotPasswordAsync(string email)
         {
             try
