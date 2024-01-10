@@ -76,8 +76,6 @@ namespace Savi.Data.Repositories.Implementation
         {
             _context.Set<T>().Update(entity);
 
-        }
-
-
+        }     
     }
 }

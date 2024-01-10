@@ -13,5 +13,6 @@ namespace Savi.Data.Repositories.Interface
         void UpdateSavingAsync(Saving saving);
         List<Saving> FindSavings(Expression<Func<Saving, bool>> expression);
         Task<Saving> GetSavingByIdAsync(string id);
+        Task<List<Saving>> GetAllSetSavingsByUserId(string userId);
     }
 }

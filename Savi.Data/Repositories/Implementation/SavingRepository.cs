@@ -1,4 +1,5 @@
-﻿using Savi.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Savi.Data.Context;
 using Savi.Data.Repositories.Interface;
 using Savi.Model.Entities;
 using System.Linq.Expressions;
@@ -7,8 +8,10 @@ namespace Savi.Data.Repositories.Implementation
 {
     public class SavingRepository : GenericRepository<Saving>, ISavingRepository
     {
+        private readonly SaviDbContext _context;
         public SavingRepository(SaviDbContext context) : base(context)
         {
+            _context = context;
         }
 
         public async Task AddSavingAsync(Saving saving)
@@ -47,6 +50,13 @@ namespace Savi.Data.Repositories.Implementation
         public List<Saving> GetSavingsAsync()
         {
             return GetAll();
+        }
+
+        public async Task<List<Saving>> GetAllSetSavingsByUserId(string userId)
+        {          
+            return await _context.Savings
+            .Where(t => t.UserId == userId)
+            .ToListAsync();            
         }
 
         public void UpdateSavingAsync(Saving saving)

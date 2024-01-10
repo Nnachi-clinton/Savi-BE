@@ -15,6 +15,5 @@ namespace Savi.Data.Repositories.Interface
         Task SaveChangesAsync();
         T GetById(string id);
         Task<bool> CreateAsync(T entity);
-
     }
 }

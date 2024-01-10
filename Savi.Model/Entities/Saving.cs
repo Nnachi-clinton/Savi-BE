@@ -18,7 +18,8 @@ namespace Savi.Model.Entities
         public DateTime NextRuntime { get; set; }
         public string TargetName { get; set; }
         public decimal TargetAmount { get; set; }
-
+        public string UserId { get; set; }
+        public AppUser User { get; set; }
         public decimal AmountToAdd { get; set; }
         public FundFrequency FundFrequency { get; set; }
 

@@ -19,12 +19,22 @@ namespace Savi.Api.Controllers
             _mapper = mapper;
         }
 
-
-        [HttpPost("SetTarget")]
-        public async Task<IActionResult> SetPersonalTarget([FromBody] PersonalSavingsDTO saving)
+        [HttpPost("SetTarget/{userId}")]
+        public async Task<IActionResult> AddMoreGoals([FromBody] PersonalSavingsDTO saving, string userId)
         {
             var personalSaving = _mapper.Map<Saving>(saving);
-            var response = await _personalSavings.SetPersonal_Savings_Target(personalSaving);
+            var response = await _personalSavings.SetPersonal_Savings_Target(personalSaving, userId);
+            if (response.StatusCode == 200)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [HttpGet("list/{UserId}")]
+        public async Task<IActionResult> GetAllGoals(string UserId)
+        {
+            var response = await _personalSavings.Get_ListOf_All_UserTargets(UserId);
             if (response.StatusCode == 200)
             {
                 return Ok(response);
