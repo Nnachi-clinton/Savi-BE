@@ -101,5 +101,17 @@ namespace Savi.Api.Controllers
                 return BadRequest(new ApiResponse<string>(false, response.Message, response.StatusCode, null, response.Errors));
             }
         }
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] AppUserCreateDto appUserCreateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+            }
+            return Ok(await _authenticationService.RegisterAsync(appUserCreateDto));
+        }
+
     }
 }
+    
+
