@@ -13,5 +13,6 @@ namespace Savi.Core.IServices
         Task<ApiResponse<string>> ChangePasswordAsync(AppUser user, string currentPassword, string newPassword);
         Task<ApiResponse<string>> LoginAsync(AppUserLoginDTO loginDTO);
         JwtSecurityToken GetToken(List<Claim> authClaims);
+        Task<ApiResponse<string>> RegisterAsync(AppUserCreateDto appUserCreateDto);
     }
 }

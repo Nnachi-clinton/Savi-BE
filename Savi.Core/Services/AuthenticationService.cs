@@ -8,6 +8,7 @@ using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Model;
 using Savi.Model.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -70,8 +71,6 @@ namespace Savi.Core.Services
             return token;
         }
 
-            
-      
         public async Task<ApiResponse<string>> ForgotPasswordAsync(string email)
         {
             try
@@ -165,5 +164,63 @@ namespace Savi.Core.Services
                 return new ApiResponse<string>(true, "Error occurred while changing password", 500, null, errorList);
             }
         }
+        public async Task<ApiResponse<string>> RegisterAsync(AppUserCreateDto appUserCreateDto)
+        {
+            var validationResults = new List<ValidationResult>();
+            var isValidModel = Validator.TryValidateObject(appUserCreateDto, new ValidationContext(appUserCreateDto), validationResults, true);
+
+            if (!isValidModel)
+            {
+                var errorMessages = validationResults.Select(r => r.ErrorMessage).ToList();
+                return new ApiResponse<string>(false, "Invalid input data.", StatusCodes.Status400BadRequest, errorMessages);
+            }
+
+            if (appUserCreateDto.Password != appUserCreateDto.ConfirmPassword)
+            {
+                return new ApiResponse<string>(false, "Passwords do not match.", StatusCodes.Status400BadRequest, new List<string> { "Passwords do not match." });
+            }
+
+            var userWithEmailExists = await _userManager.FindByEmailAsync(appUserCreateDto.Email);
+            if (userWithEmailExists != null)
+            {
+                return new ApiResponse<string>(false, "User with this email already exists.", StatusCodes.Status400BadRequest, new List<string> { "User with this email already exists." });
+            }
+
+            var userWithPhoneNumberExists = await _userManager.FindByNameAsync(appUserCreateDto.PhoneNumber);
+            if (userWithPhoneNumberExists != null)
+            {
+                return new ApiResponse<string>(false, "User with this phone number already exists.", StatusCodes.Status400BadRequest, new List<string> { "User with this phone number already exists." });
+            }
+
+            var appUser = new AppUser
+            {
+                FirstName = appUserCreateDto.FirstName,
+                LastName = appUserCreateDto.LastName,
+                Email = appUserCreateDto.Email,
+                UserName = appUserCreateDto.Email,
+                PhoneNumber = appUserCreateDto.PhoneNumber
+            };
+            try
+            {
+                var result = await _userManager.CreateAsync(appUser, appUserCreateDto.Password);
+                if (!result.Succeeded)
+                {
+                    return new ApiResponse<string>(false, "User unable to register.", StatusCodes.Status400BadRequest, new List<string> { "User unable to register." });
+                }
+
+                return ApiResponse<string>.Success(appUserCreateDto.Email, $"{appUserCreateDto.FirstName} registered successfully", StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while adding a user " + ex.InnerException);
+                var errorList = new List<string> { ex.InnerException?.ToString() ?? ex.Message };
+                return new ApiResponse<string>(false, "Error occurred while adding a user.", StatusCodes.Status500InternalServerError, errorList);
+            }
+        }
     }
+   
 }
+
+    
+
+   

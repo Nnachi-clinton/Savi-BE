@@ -29,7 +29,7 @@
             Message = message;
             StatusCode = statusCode;
         }
-        public ApiResponse(T data, string message = null)
+        public ApiResponse(T data, string message)
         {
             Succeeded = true;
             Message = message;
@@ -40,6 +40,10 @@
             Succeeded = isSucceeded;
             Data = data;
             Errors = errors;
+        }
+
+        public ApiResponse(bool v1, int status201Created, string v2)
+        {
         }
 
         public static ApiResponse<T> Success(T data, string message, int statusCode)
