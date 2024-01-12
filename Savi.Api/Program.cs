@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Savi.Api.Configurations;
 using Savi.Api.Extensions;
 
@@ -20,8 +21,19 @@ namespace Savi.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-   //         builder.Services.AddDbContext<SaviDbContext>(options =>
+			//         builder.Services.AddDbContext<SaviDbContext>(options =>
 			//options.UseSqlServer(configuration.GetConnectionString("SaviSavings")));
+
+
+
+			builder.Services.AddControllers();
+			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+			builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddSwaggerGen();
+			builder.Services.AddCors();
+			builder.Services.AddAutoMapper(typeof(MapperProfile));
+
 
 
 			var app = builder.Build();
