@@ -19,7 +19,7 @@ namespace Savi.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("SetTarget/{userId}")]
+        [HttpPost("SetGoal/{userId}")]
         public async Task<IActionResult> AddMoreGoals([FromBody] PersonalSavingsDTO saving, string userId)
         {
             var personalSaving = _mapper.Map<Saving>(saving);
@@ -31,7 +31,7 @@ namespace Savi.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpGet("list/{UserId}")]
+        [HttpGet("listAllGoals/{UserId}")]
         public async Task<IActionResult> GetAllGoals(string UserId)
         {
             var response = await _personalSavings.Get_ListOf_All_UserTargets(UserId);

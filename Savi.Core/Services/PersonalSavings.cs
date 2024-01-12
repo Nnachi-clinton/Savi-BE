@@ -15,140 +15,114 @@ namespace Savi.Core.Services
             _savingRepository = savingRepository;
         }
 
-        public async Task<ResponseDto<List<Saving>>> Get_ListOf_All_UserTargets(string UserId)
-        {
-            var response = new ResponseDto<List<Saving>>();
-            try
-            {
-                var listOfTargets = await _savingRepository.GetAllSetSavingsByUserId(UserId);
-                if (listOfTargets.Any())
-                {
-                    response.DisplayMessage = "Success";
-                    response.Result = listOfTargets;
-                    response.StatusCode = 200;
-                    return response;
-                }
-                response.DisplayMessage = "Failed";
-                response.Result = null;
-                response.StatusCode = 400;
-                return response;
-            }
-
-            catch (Exception ex)
-            {
-                response.DisplayMessage = ex.Message;
-                response.Result = null;
-                response.StatusCode = 500;
-                return response;
-            }
-        }
-
         public async Task<ResponseDto<string>> SetPersonal_Savings_Target(Saving saving, string userId)
         {
             var response = new ResponseDto<string>();
+
             try
             {
-                if (saving.FundFrequency== FundFrequency.Daily)
-                {
-                    saving.NextRuntime = DateTime.Today;
+                saving.NextRuntime = DateTime.Today;
 
-                    var x = saving.TargetAmount;
-                    var y = saving.AmountToAdd;
-                    if (x <= 0 || y <= 0)
-                    {
-                        response.DisplayMessage = "Failed";
-                        response.Result = "TargetAmount or AmountToAdd cannot be less than or equal to zero";
-                        response.StatusCode = 400;
-                        return response;
-                    }
-                    var z = x / y;
-                    saving.EndDate = DateTime.Now.AddDays(((double)z));
-                    saving.WithdrawalDate = saving.EndDate.AddDays(1);
-                    saving.TargetName = saving.TargetName;
-                    saving.UserId = userId;
-                    var newTarget = await _savingRepository.CreateSavings(saving);
-                    if (newTarget)
-                    {
-                        response.DisplayMessage = "Success";
-                        response.Result = $"Your target of amount {saving.TargetAmount} has been successfully created";
-                        response.StatusCode = 200;
-                        return response;
-                    }
-                    response.DisplayMessage = "Failed";
-                    response.Result = $"Unable to create target of amount{saving.TargetAmount}";
-                    response.StatusCode = 400;
+                if (saving.TargetAmount <= 0 || saving.AmountToAdd <= 0)
+                {
+                    SetErrorResponse(response, "TargetAmount or AmountToAdd cannot be less than or equal to zero", 400);
                     return response;
                 }
-                else if (saving.FundFrequency == FundFrequency.Weekly)
+
+                decimal multiplier;
+                switch (saving.FundFrequency)
                 {
-                    saving.NextRuntime = DateTime.Today;
-                    var x = saving.TargetAmount;
-                    var y = saving.AmountToAdd;
-                    if (x <= 0 || y <= 0)
-                    {
-                        response.DisplayMessage = "Failed";
-                        response.Result = "TargetAmount or AmountToAdd cannot be less than or equal to zero";
-                        response.StatusCode = 400;
-                        return response;
-                    }
-                    var z = (x / y) * 6;
-                    saving.EndDate = DateTime.Now.AddDays(((double)z));
-                    saving.WithdrawalDate = saving.EndDate.AddDays(1);
-                    saving.TargetName = saving.TargetName;
-                    userId = saving.UserId;
-                    var newTarget = await _savingRepository.CreateSavings(saving);
-                    if (newTarget)
-                    {
-                        response.DisplayMessage = "Success";
-                        response.Result = $"Your target of amount {saving.TargetAmount} has been successfully created";
-                        response.StatusCode = 200;
-                        return response;
-                    }
-                    response.DisplayMessage = "Failed";
-                    response.Result = $"Unable to create target of amount{saving.TargetAmount}";
-                    response.StatusCode = 400;
-                    return response;
+                    case FundFrequency.Daily:
+                        multiplier = 1;
+                        break;
+                    case FundFrequency.Weekly:
+                        multiplier = 6;
+                        break;
+                    default:
+                        multiplier = 30;
+                        break;
+                }
+
+                var t = (saving.TargetAmount / saving.AmountToAdd) * multiplier;
+                double z = (double)t;
+                saving.EndDate = DateTime.Now.AddDays(z);
+                saving.WithdrawalDate = saving.EndDate.AddDays(1);
+                saving.UserId = userId;
+
+                var newTarget = await _savingRepository.CreateSavings(saving);
+
+                if (newTarget)
+                {
+                    SetSuccessResponse(response, $"Your target of amount {saving.TargetAmount} has been successfully created", 200);
                 }
                 else
                 {
-                    saving.NextRuntime = DateTime.Today;
-                    var x = saving.TargetAmount;
-                    var y = saving.AmountToAdd;
-                    if (x <= 0 || y <= 0)
-                    {
-                        response.DisplayMessage = "Failed";
-                        response.Result = "TargetAmount or AmountToAdd cannot be less than or equal to zero";
-                        response.StatusCode = 400;
-                        return response;
-                    }
-                    var z = (x / y) * 30;
-                    saving.EndDate = DateTime.Now.AddDays(((double)z));
-                    saving.WithdrawalDate = saving.EndDate.AddDays(1);
-                    saving.TargetName = saving.TargetName;
-                    userId = saving.UserId;
-                    var newTarget = await _savingRepository.CreateSavings(saving);
-                    if (newTarget)
-                    {
-                        response.DisplayMessage = "Success";
-                        response.Result = $"Your target of amount {saving.TargetAmount} has been successfully created";
-                        response.StatusCode = 200;
-                        return response;
-                    }
-                    response.DisplayMessage = "Failed";
-                    response.Result = $"Unable to create target of amount{saving.TargetAmount}";
-                    response.StatusCode = 400;
-                    return response;
+                    SetErrorResponse(response, $"Unable to create target of amount {saving.TargetAmount}", 400);
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                SetErrorResponse(response, ex.Message, 400);
+                return response;
+            }
+        }
+        private static void SetErrorResponse(ResponseDto<string> response, string errorMessage, int statusCode)
+        {
+            response.DisplayMessage = "Failed";
+            response.Result = errorMessage;
+            response.StatusCode = statusCode;
+        }
+        private static void SetSuccessResponse(ResponseDto<string> response, string successMessage, int statusCode)
+        {
+            response.DisplayMessage = "Success";
+            response.Result = successMessage;
+            response.StatusCode = statusCode;
+        }
+        private static void SetSuccessResponse<T>(ResponseDto<T> response, string successMessage, T result, int statusCode)
+        {
+            response.DisplayMessage = "Success";
+            response.Result = result;
+            response.StatusCode = statusCode;
+        }    
+        private static void SetNotFoundResponse<T>(ResponseDto<T> response, string errorMessage, int statusCode)
+        {
+            response.DisplayMessage = "Failed";
+            response.Result = default(T); // or null, depending on the type T
+            response.StatusCode = statusCode;
+        }
+        private static void SetErrorResponse<T>(ResponseDto<T> response, string errorMessage, int statusCode)
+        {
+            response.DisplayMessage = "Failed";
+            response.Result = default(T); 
+            response.StatusCode = statusCode;
+        }
+        public async Task<ResponseDto<List<Saving>>> Get_ListOf_All_UserTargets(string userId)
+        {
+            var response = new ResponseDto<List<Saving>>();
+
+            try
+            {
+                var listOfTargets = await _savingRepository.GetAllSetSavingsByUserId(userId);
+
+                if (listOfTargets.Any())
+                {
+                    SetSuccessResponse(response, "Targets retrieved successfully", listOfTargets, 200);
+                }
+                else
+                {
+                    SetNotFoundResponse(response, "No targets found for the user", 404);
                 }
             }
             catch (Exception ex)
             {
-
-                response.DisplayMessage = ex.Message;
-                response.Result = $"Unable to create target of amount{saving.TargetAmount}";
-                response.StatusCode = 400;
-                return response;
+                SetErrorResponse(response, ex.Message, 500);
             }
 
+            return response;
         }
+
+
     }
 }
