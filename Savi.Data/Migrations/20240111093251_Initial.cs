@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Savi.Data.Migrations
 {
-    public partial class initialmigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,6 +34,9 @@ namespace Savi.Data.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PasswordResetToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResetTokenExpires = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -86,11 +89,12 @@ namespace Savi.Data.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    Occupation = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Occupation = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BVN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdentificationType = table.Column<int>(type: "int", nullable: false),
                     IdentificationNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdentificationDocumentUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProofOfAddressUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AppUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -333,7 +337,7 @@ namespace Savi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupTransactions",
+                name: "GroupsTransaction",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -349,14 +353,14 @@ namespace Savi.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupTransactions", x => x.Id);
+                    table.PrimaryKey("PK_GroupsTransaction", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GroupTransactions_AspNetUsers_AppUserId",
+                        name: "FK_GroupsTransaction_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_GroupTransactions_Groups_GroupId",
+                        name: "FK_GroupsTransaction_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "Id");
@@ -441,13 +445,13 @@ namespace Savi.Data.Migrations
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupTransactions_AppUserId",
-                table: "GroupTransactions",
+                name: "IX_GroupsTransaction_AppUserId",
+                table: "GroupsTransaction",
                 column: "AppUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupTransactions_GroupId",
-                table: "GroupTransactions",
+                name: "IX_GroupsTransaction_GroupId",
+                table: "GroupsTransaction",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
@@ -488,7 +492,7 @@ namespace Savi.Data.Migrations
                 name: "CardDetails");
 
             migrationBuilder.DropTable(
-                name: "GroupTransactions");
+                name: "GroupsTransaction");
 
             migrationBuilder.DropTable(
                 name: "Kycs");

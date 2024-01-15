@@ -5,9 +5,8 @@
         NIN,
         Passport,
         DriverLicense,
-        NepaBill,
+        UtilityBill,
         VotersID,
         StudentID,
-        WorkID
     }
 }

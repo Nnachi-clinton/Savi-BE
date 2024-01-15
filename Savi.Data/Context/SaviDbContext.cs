@@ -5,7 +5,7 @@ using Savi.Model.Entities;
 
 namespace Savi.Data.Context
 {
-    public class SaviDbContext : IdentityDbContext<AppUser, IdentityRole<string>,string>
+    public class SaviDbContext : IdentityDbContext<AppUser, IdentityRole<string>, string>
     {
         public SaviDbContext(DbContextOptions<SaviDbContext> options) : base(options)
         {

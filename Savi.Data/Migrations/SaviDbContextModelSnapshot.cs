@@ -455,6 +455,9 @@ namespace Savi.Data.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
+                    b.Property<string>("IdentificationDocumentUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdentificationNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -467,8 +470,8 @@ namespace Savi.Data.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Occupation")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Occupation")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProofOfAddressUrl")
                         .HasColumnType("nvarchar(max)");

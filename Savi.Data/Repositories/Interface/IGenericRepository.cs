@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Savi.Model.Entities;
+using System.Linq.Expressions;
 
 namespace Savi.Data.Repositories.Interface
 {
