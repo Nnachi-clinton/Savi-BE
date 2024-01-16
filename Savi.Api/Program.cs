@@ -32,11 +32,12 @@ namespace Savi.Api
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddCors();
-			builder.Services.AddAutoMapper(typeof(MapperProfile));
+
+            builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 
 
-			var app = builder.Build();
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
