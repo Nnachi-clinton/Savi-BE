@@ -12,6 +12,7 @@ namespace Savi.Api.AutoMapperProfile
             CreateMap<KycResponseDto, Kyc>().ReverseMap();
             CreateMap<UpdateKycDto, Kyc>().ReverseMap();
             CreateMap<Saving, PersonalSavingsDTO>().ReverseMap();
+            CreateMap<AppUser, AppUserDto>();
         }
     }
 }
