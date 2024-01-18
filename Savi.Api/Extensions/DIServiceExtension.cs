@@ -8,7 +8,7 @@ using Savi.Data.Repositories.Implementation;
 using Savi.Data.Repositories.Interface;
 using Savi.Data.UnitOfWork;
 using Savi.Model.Entities;
-using Savi.Utility.AutoMapperProfile;
+using Savi.Api.AutoMapperProfile;
 
 namespace Savi.Api.Extensions
 {
@@ -24,8 +24,10 @@ namespace Savi.Api.Extensions
             config.GetSection("CloudinarySettings").Bind(cloudinarySettings);
             services.AddSingleton(cloudinarySettings);
             services.AddScoped(typeof(ICloudinaryServices<>), typeof(CloudinaryServices<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IKycService, KycService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();   
             services.AddIdentity<AppUser, IdentityRole>()
         .AddEntityFrameworkStores<SaviDbContext>()
         .AddDefaultTokenProviders();

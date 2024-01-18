@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+using Savi.Api.AutoMapperProfile;
 using Savi.Api.Configurations;
 using Savi.Api.Extensions;
 
@@ -40,7 +40,7 @@ namespace Savi.Api
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
 			builder.Services.AddCors();
-			//builder.Services.AddAutoMapper(typeof(MapperProfile));
+			builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 
 
@@ -52,7 +52,8 @@ namespace Savi.Api
                 app.UseSwagger();
                 app.UseSwaggerUI( c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Savi v1"));
             }
-
+            app.UseCors(p => p.AllowAnyOrigin()
+                .AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseCors("AllowAllOrigins");
