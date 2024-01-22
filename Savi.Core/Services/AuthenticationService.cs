@@ -21,17 +21,21 @@ namespace Savi.Core.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly EmailServices _emailServices;
         private readonly EmailSettings _emailSettings;
-        private readonly ILogger _logger;       
-        private readonly SignInManager<AppUser> _signInManager;     
+        private readonly ILogger _logger;
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly IEmailServices _emailService;
+        private readonly IWalletServices services;
 
-        public AuthenticationService(IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IOptions<EmailSettings> emailSettings, ILogger<AuthenticationService> logger)        
+        public AuthenticationService(IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IOptions<EmailSettings> emailSettings, ILogger<AuthenticationService> logger, IEmailServices emailService, IWalletServices services)
         {
             _config = config;
             _userManager = userManager;
             _emailServices = new EmailServices(emailSettings);
             _emailSettings = emailSettings.Value;
-            _logger = logger;          
-            _signInManager = signInManager;           
+            _logger = logger;
+            _signInManager = signInManager;
+            _emailService = emailService;
+            this.services = services;
         }
         public async Task<ApiResponse<string>> LoginAsync(AppUserLoginDTO loginDTO)
         {
@@ -40,6 +44,11 @@ namespace Savi.Core.Services
                 var user = await _userManager.FindByEmailAsync(loginDTO.Email);
                 if (user == null)
                     return ApiResponse<string>.Failed(false, "Invalid Email or password.", 400, new List<string> { "Invalid Email or password." });
+                if (!user.EmailConfirmed)
+                {
+                    return ApiResponse<string>.Failed(false, "You have not confirmed your email", 400, new List<string> { "Please, confirm your email and Login again." });
+
+                }
                 if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
                     var authClaims = new List<Claim>
@@ -47,17 +56,16 @@ namespace Savi.Core.Services
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-                    var jwtToken = GetToken(authClaims);   
+                    var jwtToken = GetToken(authClaims);
                     return ApiResponse<string>.Success(new JwtSecurityTokenHandler().WriteToken(jwtToken), "Login successful", 200);
-                }            
+                }
                 return ApiResponse<string>.Failed(false, "Invalid Email or password.", 400, new List<string> { "Invalid Email or password." });
             }
             catch (Exception ex)
-            {                
+            {
                 return ApiResponse<string>.Failed(false, "An unexpected error occurred during login.", 500, new List<string> { ex.Message });
             }
         }
-
         public JwtSecurityToken GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));
@@ -70,7 +78,6 @@ namespace Savi.Core.Services
             );
             return token;
         }
-
         public async Task<ApiResponse<string>> ForgotPasswordAsync(string email)
         {
             try
@@ -141,7 +148,6 @@ namespace Savi.Core.Services
                 return new ApiResponse<string>(true, "Error occurred while resetting password", 500, null, errorList);
             }
         }
-
         public async Task<ApiResponse<string>> ChangePasswordAsync(AppUser user, string currentPassword, string newPassword)
         {
             try
@@ -198,7 +204,9 @@ namespace Savi.Core.Services
                 LastName = appUserCreateDto.LastName,
                 Email = appUserCreateDto.Email,
                 UserName = appUserCreateDto.Email,
-                PhoneNumber = appUserCreateDto.PhoneNumber
+                PhoneNumber = appUserCreateDto.PhoneNumber,
+                EmailConfirmed = false,
+                EmailConfirmationToken = Guid.NewGuid().ToString()
             };
             try
             {
@@ -207,8 +215,20 @@ namespace Savi.Core.Services
                 {
                     return new ApiResponse<string>(false, "User unable to register.", StatusCodes.Status400BadRequest, new List<string> { "User unable to register." });
                 }
+                var emailConfirmationLink = GenerateEmailConfirmationLink(appUser.Id, appUser.EmailConfirmationToken);
 
-                return ApiResponse<string>.Success(appUserCreateDto.Email, $"{appUserCreateDto.FirstName} registered successfully", StatusCodes.Status200OK);
+
+                var mailRequest = new MailRequest
+                {
+                    ToEmail = appUser.Email,
+                    Subject = "Email Confirmation",
+                    Body = $"Please confirm your email by clicking <a href='{emailConfirmationLink}'>here</a>."
+                };
+                await services.CreateWallet(appUser.Id);
+                await _emailService.SendHtmlEmailAsync(mailRequest);
+                return ApiResponse<string>.Success(appUserCreateDto.Email, "Registration successful. Please check your email for confirmation instructions.", StatusCodes.Status200OK);
+
+                //return ApiResponse<string>.Success(appUserCreateDto.Email, $"{appUserCreateDto.FirstName} registered successfully", StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
@@ -217,8 +237,54 @@ namespace Savi.Core.Services
                 return new ApiResponse<string>(false, "Error occurred while adding a user.", StatusCodes.Status500InternalServerError, errorList);
             }
         }
+        public async Task<ApiResponse<string>> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null || user.EmailConfirmationToken != token)
+            {
+                return new ApiResponse<string>(false, "Invalid confirmation link.", StatusCodes.Status400BadRequest);
+            }
+
+            user.EmailConfirmed = true;
+            user.EmailConfirmationToken = null;
+            await _userManager.UpdateAsync(user);
+
+            return new ApiResponse<string>(true, "Email confirmed successfully.", StatusCodes.Status200OK);
+        }
+        private string GenerateEmailConfirmationLink(string userId, string token)
+        {
+            string confirmationLink = $"http://localhost:3000/EmailVerifiedModal?userId={userId}&token={token}";
+            return confirmationLink;
+        }
+        public async Task<ApiResponse<string>> ResendEmailVerifyLink(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return new ApiResponse<string>(false, "User not found.", StatusCodes.Status400BadRequest, new List<string> { "You can get onboard by registering on our site." });
+                }
+                var emailConfirmationLink = GenerateEmailConfirmationLink(user.Id, user.EmailConfirmationToken);
+                var mailRequest = new MailRequest
+                {
+                    ToEmail = user.Email,
+                    Subject = "Email Confirmation",
+                    Body = $"Please confirm your email by clicking <a href='{emailConfirmationLink}'>here</a>."
+                };
+                await _emailService.SendHtmlEmailAsync(mailRequest);
+                return ApiResponse<string>.Success(user.Email, "Email Resent successfully. Please check your email for confirmation instructions.", StatusCodes.Status200OK);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while sending an email" + ex.InnerException);
+                var errorList = new List<string> { ex.InnerException?.ToString() ?? ex.Message };
+                return new ApiResponse<string>(false, "Error occurred while sending an email.", StatusCodes.Status500InternalServerError, errorList);
+            }
+        }
+
     }
-   
 }
 
     

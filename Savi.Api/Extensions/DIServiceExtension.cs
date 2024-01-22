@@ -30,14 +30,15 @@ namespace Savi.Api.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddIdentity<AppUser, IdentityRole>()
-        .AddEntityFrameworkStores<SaviDbContext>()
-        .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<SaviDbContext>()
+            .AddDefaultTokenProviders();
             
             services.AddDbContext<SaviDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPersonalSavings, PersonalSavings>();
             services.AddScoped<ISavingRepository, SavingRepository>();
             services.AddAutoMapper(typeof(MapperProfile));
+            services.AddScoped<IWalletServices, WalletServices>();
         }
     }
 }

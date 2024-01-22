@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Savi.Core.DTO; 
 using Savi.Core.IServices;
+using Savi.Core.Services;
 using Savi.Model;
 using Savi.Model.Entities;
 
@@ -109,6 +110,20 @@ namespace Savi.Api.Controllers
                 return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
             }
             return Ok(await _authenticationService.RegisterAsync(appUserCreateDto));
+        }
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            return Ok(await _authenticationService.ConfirmEmailAsync(userId, token));
+        }
+        [HttpPost("resend-verification-email")]
+        public async Task<IActionResult> ResendEmailVerificationLink(string userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+            }
+            return Ok(await _authenticationService.ResendEmailVerifyLink(userId));
         }
 
     }

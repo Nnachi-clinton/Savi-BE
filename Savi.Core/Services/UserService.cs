@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-//using Microsoft.PowerBI.Api.Models;
 using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Model;

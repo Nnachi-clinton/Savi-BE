@@ -189,6 +189,9 @@ namespace Savi.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("EmailConfirmationToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
@@ -587,7 +590,7 @@ namespace Savi.Data.Migrations
                     b.Property<string>("TransactionPin")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WalletId")
+                    b.Property<string>("WalletNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -603,6 +606,9 @@ namespace Savi.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal>("CumulativeAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("FundAmount")
                         .HasColumnType("decimal(18,2)");
@@ -624,6 +630,9 @@ namespace Savi.Data.Migrations
 
                     b.Property<string>("WalletId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WalletNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
