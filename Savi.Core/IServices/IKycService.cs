@@ -9,7 +9,7 @@ namespace Savi.Core.IServices
         Task<ApiResponse<KycRequestDto>> GetKycByIdAsync(string id);
         Task<ApiResponse<GetAllKycsDto>> GetKycsByPaginationAsync(int page, int perPage);
         Task<ApiResponse<KycResponseDto>> AddKycAsync(string userId, KycRequestDto kycRequestDto);
-        Task<ApiResponse<KycResponseDto>> UpdateKycAsync(string kycId, UpdateKycDto updateKycDto);
         Task<ApiResponse<bool>> DeleteKycByIdAsync (string kycId);
+        Task<ApiResponse<bool>> IsKycVerifiedAsync(string userId);
     }
 }

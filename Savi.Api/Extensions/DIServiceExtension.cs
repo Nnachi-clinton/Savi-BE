@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Savi.Core.IServices;
 using Savi.Core.Services;
@@ -28,10 +29,10 @@ namespace Savi.Api.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddIdentity<AppUser, IdentityRole>()
-        .AddEntityFrameworkStores<SaviDbContext>()
-        .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<SaviDbContext>()
+                .AddDefaultTokenProviders();
             services.AddDbContext<SaviDbContext>(options =>
-           options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
         }
     }
 }

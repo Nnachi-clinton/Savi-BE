@@ -13,7 +13,7 @@ namespace Savi.Data.Repositories.Implementation
 
         public async Task DeleteKycAsync(Kyc kyc) => await DeleteAsync(kyc);
 
-        public List<Kyc> FindKycs(Expression<Func<Kyc, bool>> expression) => FindAsync(expression);
+        public async Task<bool> FindKyc(Expression<Func<Kyc, bool>> expression) => await ExistsAsync(expression);
 
         public async Task<Kyc> GetKycByIdAsync(string id) => await GetByIdAsync(id);
 
