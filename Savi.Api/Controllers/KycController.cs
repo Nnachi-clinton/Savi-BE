@@ -28,13 +28,13 @@ namespace Savi.Api.Controllers
         }
 
         [HttpGet("kycId")]
-        public async Task<IActionResult> GetKycByIdAsync(string userId)
+        public async Task<IActionResult> GetKycByIdAsync(string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
             }
-            return Ok(await _kycService.GetKycByIdAsync(userId));
+            return Ok(await _kycService.GetKycByIdAsync(id));
         }
 
         [HttpGet("get-kycs")]
@@ -47,16 +47,6 @@ namespace Savi.Api.Controllers
             return Ok(await _kycService.GetKycsByPaginationAsync(page, perPage));
         }
 
-        [HttpPut("update/{kycId}")]
-        public async Task<IActionResult> UpdateKycAsync(string kycId, [FromBody] UpdateKycDto updateKycDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
-            }
-            return Ok(await _kycService.UpdateKycAsync(kycId, updateKycDto));
-        }
-
         [HttpDelete("delete/{kycId}")]
         public async Task<IActionResult> DeleteKycAsync(string kycId)
         {
@@ -65,6 +55,16 @@ namespace Savi.Api.Controllers
                 return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
             }
             return Ok(await _kycService.DeleteKycByIdAsync(kycId));
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> CheckKycVerification(string userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+            }
+            return Ok(await _kycService.IsKycVerifiedAsync(userId));
         }
     }
 }

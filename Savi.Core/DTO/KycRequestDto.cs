@@ -21,6 +21,7 @@ namespace Savi.Core.DTO
         public string Address { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "BVN is required")]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "The BVN must be 11 characters long.")]
         public string BVN { get; set; } = string.Empty;
 
         [Required]

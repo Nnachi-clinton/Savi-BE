@@ -139,25 +139,21 @@ namespace Savi.Core.Services
             }
         }
 
-        public async Task<ApiResponse<KycResponseDto>> UpdateKycAsync(string kycId, UpdateKycDto updateKycDto)
+        public async Task<ApiResponse<bool>> IsKycVerifiedAsync(string userId)
         {
             try
             {
-                var existingKyc = await _unitOfWork.KycRepository.GetKycByIdAsync(kycId);
-                if (existingKyc == null)
+                var existingKyc = await _unitOfWork.KycRepository.FindKyc(kyc => kyc.AppUserId == userId);
+                if (existingKyc == false)
                 {
-                    return new ApiResponse<KycResponseDto>(false, "KYC not found", StatusCodes.Status404NotFound);
+                    return new ApiResponse<bool>(false, "KYC is not verified", StatusCodes.Status404NotFound, false);
                 }
-                var kyc = _mapper.Map(updateKycDto, existingKyc);
-                _unitOfWork.KycRepository.UpdateKyc(existingKyc);
-                _unitOfWork.SaveChanges();
-                var response = _mapper.Map<KycResponseDto>(kyc);
-                return new ApiResponse<KycResponseDto>(true, "KYC found successsfully", StatusCodes.Status200OK);
+                return new ApiResponse<bool>(true, "KYC is verified", StatusCodes.Status200OK, true);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating KYC");
-                return new ApiResponse<KycResponseDto>(false, "Error occurred while processing your request", StatusCodes.Status500InternalServerError, new List<string> { ex.Message });
+                _logger.LogError(ex, "Error occurred while verifying KYC");
+                return new ApiResponse<bool>(false, "Error occurred while processing your request", StatusCodes.Status500InternalServerError, new List<string> { ex.Message});
             }
         }
     }

@@ -191,8 +191,7 @@ namespace Savi.Core.Services
             {
                 return new ApiResponse<string>(false, "User with this email already exists.", StatusCodes.Status400BadRequest, new List<string> { "User with this email already exists." });
             }
-
-            var userWithPhoneNumberExists = await _userManager.FindByNameAsync(appUserCreateDto.PhoneNumber);
+            var userWithPhoneNumberExists = _userManager.Users.FirstOrDefault(u => u.PhoneNumber == appUserCreateDto.PhoneNumber);
             if (userWithPhoneNumberExists != null)
             {
                 return new ApiResponse<string>(false, "User with this phone number already exists.", StatusCodes.Status400BadRequest, new List<string> { "User with this phone number already exists." });
