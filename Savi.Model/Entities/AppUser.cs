@@ -20,5 +20,8 @@ namespace Savi.Model.Entities
         public ICollection<Group> Groups { get; set; }
         public ICollection<GroupTransaction> GroupTransactions { get; set; }
         public bool IsActive { get; set; }
+        //For email confirmation
+        public string EmailConfirmationToken { get; set; }
+
     }
 }

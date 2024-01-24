@@ -12,8 +12,8 @@ using Savi.Data.Context;
 namespace Savi.Data.Migrations
 {
     [DbContext(typeof(SaviDbContext))]
-    [Migration("20240111093251_Initial")]
-    partial class Initial
+    [Migration("20240118155658_AddedEntity")]
+    partial class AddedEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -190,6 +190,9 @@ namespace Savi.Data.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("EmailConfirmationToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -495,9 +498,6 @@ namespace Savi.Data.Migrations
                     b.Property<decimal>("AmountToAdd")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
 
@@ -506,6 +506,9 @@ namespace Savi.Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("FundFrequency")
                         .HasColumnType("int");
@@ -519,24 +522,39 @@ namespace Savi.Data.Migrations
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("NextRuntime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Purpose")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("TargetAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("TargetDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("TargetName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("WalletId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("WithdrawalDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Savings");
                 });
@@ -712,9 +730,11 @@ namespace Savi.Data.Migrations
 
             modelBuilder.Entity("Savi.Model.Entities.Saving", b =>
                 {
-                    b.HasOne("Savi.Model.Entities.AppUser", null)
+                    b.HasOne("Savi.Model.Entities.AppUser", "User")
                         .WithMany("Savings")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Savi.Model.Entities.WalletFunding", b =>

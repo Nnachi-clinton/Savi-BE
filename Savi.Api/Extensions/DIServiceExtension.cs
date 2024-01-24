@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Savi.Core.IServices;
 using Savi.Core.Services;
@@ -8,6 +9,7 @@ using Savi.Data.Repositories.Implementation;
 using Savi.Data.Repositories.Interface;
 using Savi.Data.UnitOfWork;
 using Savi.Model.Entities;
+using Savi.Api.AutoMapperProfile;
 
 namespace Savi.Api.Extensions
 {
@@ -29,10 +31,15 @@ namespace Savi.Api.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<SaviDbContext>()
-                .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<SaviDbContext>()
+            .AddDefaultTokenProviders();
+            
             services.AddDbContext<SaviDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IPersonalSavings, PersonalSavings>();
+            services.AddScoped<ISavingRepository, SavingRepository>();
+            services.AddAutoMapper(typeof(MapperProfile));
+            services.AddScoped<IWalletServices, WalletServices>();
         }
     }
 }

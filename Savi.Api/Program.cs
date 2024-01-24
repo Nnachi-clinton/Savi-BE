@@ -21,12 +21,20 @@ namespace Savi.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-			//         builder.Services.AddDbContext<SaviDbContext>(options =>
-			//options.UseSqlServer(configuration.GetConnectionString("SaviSavings")));
+            //         builder.Services.AddDbContext<SaviDbContext>(options =>
+            //options.UseSqlServer(configuration.GetConnectionString("SaviSavings")));
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
-
-			builder.Services.AddControllers();
+            builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
 			builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +57,7 @@ namespace Savi.Api
                 .AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseCors("AllowAllOrigins");
 
             app.UseAuthorization();
 

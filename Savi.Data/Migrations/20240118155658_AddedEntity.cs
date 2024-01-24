@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Savi.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class AddedEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,6 +37,7 @@ namespace Savi.Data.Migrations
                     PasswordResetToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ResetTokenExpires = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    EmailConfirmationToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -293,11 +294,16 @@ namespace Savi.Data.Migrations
                     Purpose = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TargetDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WithdrawalDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NextRuntime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TargetName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TargetAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     AmountToAdd = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     FundFrequency = table.Column<int>(type: "int", nullable: false),
                     WalletId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
@@ -306,8 +312,8 @@ namespace Savi.Data.Migrations
                 {
                     table.PrimaryKey("PK_Savings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Savings_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
+                        name: "FK_Savings_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
@@ -455,9 +461,9 @@ namespace Savi.Data.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Savings_AppUserId",
+                name: "IX_Savings_UserId",
                 table: "Savings",
-                column: "AppUserId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WalletFundings_WalletId",
