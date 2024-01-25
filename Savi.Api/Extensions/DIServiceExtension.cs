@@ -40,6 +40,13 @@ namespace Savi.Api.Extensions
             services.AddScoped<ISavingRepository, SavingRepository>();
             services.AddAutoMapper(typeof(MapperProfile));
             services.AddScoped<IWalletServices, WalletServices>();
+            //services.AddTransient<WalletServices>(provider =>
+            //{
+            //    IConfiguration configuration = provider.GetRequiredService<IConfiguration>();
+            //    return new WalletServices(configuration);
+            //});
+            services.AddTransient<WalletServices>();
+
         }
     }
 }

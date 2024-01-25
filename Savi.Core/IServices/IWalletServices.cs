@@ -6,5 +6,7 @@ namespace Savi.Core.IServices
     public interface IWalletServices
     {
         Task<ApiResponse<string>> CreateWallet(string userId);
+        Task<ResponseDto<WalletDto>> GetUserWalletAsync(string userId);
+        Task<string> VerifyTransaction(string referenceCode);
     }
 }
