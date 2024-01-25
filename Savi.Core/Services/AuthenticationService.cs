@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -236,6 +237,7 @@ namespace Savi.Core.Services
                 return new ApiResponse<string>(false, "Error occurred while adding a user.", StatusCodes.Status500InternalServerError, errorList);
             }
         }
+
         public async Task<ApiResponse<string>> ConfirmEmailAsync(string userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -256,6 +258,7 @@ namespace Savi.Core.Services
             string confirmationLink = $"http://localhost:3000/EmailVerifiedModal?userId={userId}&token={token}";
             return confirmationLink;
         }
+
         public async Task<ApiResponse<string>> ResendEmailVerifyLink(string userId)
         {
             try
@@ -283,6 +286,63 @@ namespace Savi.Core.Services
             }
         }
 
+        public async Task<ApiResponse<string>> VerifyAndAuthenticateUserAsync(string idToken)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, new GoogleJsonWebSignature.ValidationSettings());
+                var userId = payload.Subject;
+                var userEmail = payload.Email;
+                var userName = payload.Name;
+                var firstName = payload.GivenName;
+                var lastName = payload.FamilyName;
+                var existingUser = await _userManager.FindByEmailAsync(userEmail);
+                if (existingUser == null)
+                {
+                    var newUser = new AppUser
+                    {
+                        Email = userEmail,
+                        UserName = userEmail,
+                        FirstName = firstName,
+                        LastName = lastName,
+                    };
+                    var result = await _userManager.CreateAsync(newUser);
+                    if (result.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(newUser, isPersistent: false);
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, newUser.Id),
+                            new Claim(ClaimTypes.Name, userName)
+                        };
+                        var jwtToken = GetToken(claims);
+                        var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+                        return new ApiResponse<string>(true, "User created and authenticated successfully on the server side", StatusCodes.Status200OK, token);
+                    }
+                    else
+                    {
+                        return new ApiResponse<string>(false, "User creation failed", StatusCodes.Status400BadRequest);
+                    }
+                }
+                else
+                {
+                    await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                    var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, existingUser.Id),
+                            new Claim(ClaimTypes.Name, userName)
+                        };
+                    var jwtToken = GetToken(claims);
+                    var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+                    return new ApiResponse<string>(true, "User authenticated successfully on the server side", StatusCodes.Status200OK, token);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while changing password");
+                return new ApiResponse<string>(false, "Error occurred while authenticating user", StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
 
