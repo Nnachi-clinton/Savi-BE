@@ -14,6 +14,7 @@ namespace Savi.Core.IServices
         Task<ApiResponse<string>> LoginAsync(AppUserLoginDTO loginDTO);
         JwtSecurityToken GetToken(List<Claim> authClaims);
         Task<ApiResponse<string>> RegisterAsync(AppUserCreateDto appUserCreateDto);
+        Task<ApiResponse<string>> VerifyAndAuthenticateUserAsync(string idToken);
         Task<ApiResponse<string>> ConfirmEmailAsync(string userId, string token);
         Task<ApiResponse<string>> ResendEmailVerifyLink(string userId);
     }

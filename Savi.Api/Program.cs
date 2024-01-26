@@ -1,6 +1,7 @@
 using Savi.Api.AutoMapperProfile;
 using Savi.Api.Configurations;
 using Savi.Api.Extensions;
+using Savi.Data.Seeder;
 
 namespace Savi.Api
 {
@@ -52,6 +53,11 @@ namespace Savi.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI( c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Savi v1"));
+            }
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceprovider = scope.ServiceProvider;
+                Seeder.SeedRolesAndSuperAdmin(serviceprovider);
             }
             app.UseCors(p => p.AllowAnyOrigin()
                 .AllowAnyHeader().AllowAnyMethod());

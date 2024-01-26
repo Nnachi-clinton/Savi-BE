@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -38,8 +40,22 @@ namespace Savi.Api.Extensions
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPersonalSavings, PersonalSavings>();
             services.AddScoped<ISavingRepository, SavingRepository>();
-            services.AddAutoMapper(typeof(MapperProfile));
             services.AddScoped<IWalletServices, WalletServices>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/api/Authentication/Login"; 
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = config["Google:ClientId"];
+                options.ClientSecret = config["Google:ClientSecret"];
+                options.CallbackPath = "/api/Authentication/signin-google/token"; 
+            });
             //services.AddTransient<WalletServices>(provider =>
             //{
             //    IConfiguration configuration = provider.GetRequiredService<IConfiguration>();

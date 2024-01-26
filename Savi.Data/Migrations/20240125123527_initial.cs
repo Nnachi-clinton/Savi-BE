@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Savi.Data.Migrations
 {
-    public partial class AddedEntity : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -112,7 +112,7 @@ namespace Savi.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    WalletId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WalletNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Reference = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -381,6 +381,8 @@ namespace Savi.Data.Migrations
                     Reference = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Narration = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TransactionType = table.Column<int>(type: "int", nullable: false),
+                    CumulativeAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    WalletNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     WalletId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
