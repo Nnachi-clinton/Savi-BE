@@ -1,4 +1,5 @@
-﻿using Savi.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Savi.Data.Context;
 using Savi.Data.Repositories.Interface;
 using Savi.Model.Entities;
 using System.Linq.Expressions;
@@ -7,8 +8,11 @@ namespace Savi.Data.Repositories.Implementation
 {
     public class WalletRepository : GenericRepository<Wallet>, IWalletRepository
     {
+        private readonly SaviDbContext context;
+
         public WalletRepository(SaviDbContext context) : base(context)
         {
+            this.context = context;
         }
 
         public async Task AddWalletAsync(Wallet wallet)
@@ -43,6 +47,10 @@ namespace Savi.Data.Repositories.Implementation
         public void UpdateWalletAsync(Wallet wallet)
         {
             UpdateAsync(wallet);
+        }
+        public Wallet WalletById(string userId)
+        {
+            return context.Wallets.FirstOrDefault(w => w.AppUserId == userId);
         }
     }
 }

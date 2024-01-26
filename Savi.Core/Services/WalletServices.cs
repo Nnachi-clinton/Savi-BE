@@ -62,7 +62,7 @@ namespace Savi.Core.Services
                 return new ApiResponse<string>(false, "Error occurred while creating a wallet.", StatusCodes.Status500InternalServerError, errorList);
             }
         }
-        public async Task<string> VerifyTransaction(string referenceCode)
+        public async Task<string> VerifyTransaction(string referenceCode, string userId)
         {
             try
             {
@@ -82,14 +82,14 @@ namespace Savi.Core.Services
                         if (data.Status == "success")                        {
                             var amount = data.Amount / 100;
                             var email = data.Customer.Email;
-                           var updateWallet = await UpdateWallet(email, amount); //email to be changed to userId, remember
+                           var updateWallet = UpdateWallet(userId, amount); //email to be changed to userId, remember blah
                              var walletFunding = new WalletFunding()
                             {
                                 FundAmount = amount,
                                 Reference = referenceCode,
-                                WalletNumber = updateWallet.WalletNumber,
-                                WalletId = updateWallet.Id,
-                                CumulativeAmount = updateWallet.Balance,
+                                WalletNumber = updateWallet.Result.WalletNumber,
+                                WalletId = updateWallet.Result.Id,
+                                CumulativeAmount = updateWallet.Result.Balance,
                                 TransactionType = Model.Enums.TransactionType.Credit,
                             };
                             await unitOfWork.WalletFundingRepository.AddAsync(walletFunding);
@@ -117,9 +117,9 @@ namespace Savi.Core.Services
 
             }
         }
-        public async Task<ResponseDto<WalletDto>> GetUserWalletAsync(string userId)
+        public ResponseDto<WalletDto> GetUserWalletAsync(string userId)
         {
-            var wallet = await unitOfWork.WalletRepository.GetByIdAsync(userId);
+            var wallet =  unitOfWork.WalletRepository.WalletById(userId);
 
             if (wallet == null)
             {
@@ -135,7 +135,7 @@ namespace Savi.Core.Services
                 AppUserId = wallet.AppUserId,
                 Reference = wallet.Reference,
                 Balance = wallet.Balance,
-                TransactionPin = wallet.TransactionPin,
+                WalletNumber = wallet.WalletNumber
             };
             return new ResponseDto<WalletDto>()
             {
@@ -144,17 +144,28 @@ namespace Savi.Core.Services
                 Result = walletDto,
             };
         }
-        private async Task<Wallet> UpdateWallet(string userId, decimal amount)
+        private ResponseDto<Wallet> UpdateWallet(string userId, decimal amount)
         {
-            var wallet = await GetUserWalletAsync(userId);
-            var updateWallet = new Wallet()
+            var wallet = unitOfWork.WalletRepository.WalletById(userId);
+            if (wallet == null)
             {
-                Balance = wallet.Result.Balance + amount,
-                ModifiedAt = DateTime.UtcNow,
-            };
-            unitOfWork.WalletRepository.UpdateAsync(updateWallet);
+                return new ResponseDto<Wallet>
+                {
+                    StatusCode = 400,
+                    DisplayMessage = "User does not have a wallet",
+                };
+            }
+            wallet.Balance += amount;
+            wallet.ModifiedAt = DateTime.UtcNow;                
+            
+            unitOfWork.WalletRepository.UpdateAsync(wallet);
             unitOfWork.SaveChanges();
-            return updateWallet;
+            return new ResponseDto<Wallet>
+            {
+                StatusCode = 200,
+                DisplayMessage = "wallet updated successfully",
+                Result = wallet
+            };
         }
 
     }

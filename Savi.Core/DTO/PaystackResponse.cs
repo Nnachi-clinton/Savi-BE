@@ -8,7 +8,7 @@
     }
     public class PaystackData
     {
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Status { get; set; }
         public PaystackCustomer Customer { get; set; }
     }
