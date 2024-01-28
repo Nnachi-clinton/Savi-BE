@@ -56,6 +56,7 @@ namespace Savi.Core.Services
             {
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
                     var jwtToken = GetToken(authClaims);
                     return ApiResponse<string>.Success(new JwtSecurityTokenHandler().WriteToken(jwtToken), "Login successful", 200);
@@ -96,7 +97,7 @@ namespace Savi.Core.Services
 
                 await _userManager.UpdateAsync(user);
 
-                var resetPasswordUrl = "http://localhost:3000/reset-password?email=" + Uri.EscapeDataString(email) + "&token=" + Uri.EscapeDataString(token);
+                var resetPasswordUrl = "http://localhost:3000/resetpassword?email=" + Uri.EscapeDataString(email) + "&token=" + Uri.EscapeDataString(token);
 
                 var mailRequest = new MailRequest
                 {

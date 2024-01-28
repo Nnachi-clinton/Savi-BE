@@ -56,6 +56,13 @@ namespace Savi.Api.Extensions
                 options.ClientSecret = config["Google:ClientSecret"];
                 options.CallbackPath = "/api/Authentication/signin-google/token"; 
             });
+            //services.AddTransient<WalletServices>(provider =>
+            //{
+            //    IConfiguration configuration = provider.GetRequiredService<IConfiguration>();
+            //    return new WalletServices(configuration);
+            //});
+            services.AddTransient<WalletServices>();
+
         }
     }
 }
