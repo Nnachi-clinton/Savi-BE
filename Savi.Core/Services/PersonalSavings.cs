@@ -123,6 +123,32 @@ namespace Savi.Core.Services
             return response;
         }
 
+        public async Task<ResponseDto<Saving>> GetPersonalSavingsById(string personalSavingsId)
+        {
+            var response = new ResponseDto<Saving>();
+            
+            try
+            {
+                var personalSavings = await _savingRepository.GetSavingByIdAsync(personalSavingsId);
 
+                if (personalSavings != null)
+                {
+                    SetSuccessResponse(response, "Personal savings details retrieved successfully", personalSavings, 200);
+                }
+                else
+                {
+                    SetNotFoundResponse(response, "Personal savings details not found", 404);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetErrorResponse(response, ex.Message, 500);
+            }
+
+            return response;
+        }
     }
+
+
 }
+
