@@ -12,8 +12,8 @@ using Savi.Data.Context;
 namespace Savi.Data.Migrations
 {
     [DbContext(typeof(SaviDbContext))]
-    [Migration("20240125123527_initial")]
-    partial class initial
+    [Migration("20240130182128_Another")]
+    partial class Another
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -498,6 +498,9 @@ namespace Savi.Data.Migrations
                     b.Property<decimal>("AmountToAdd")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<bool>("AutoSave")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
 
@@ -515,6 +518,9 @@ namespace Savi.Data.Migrations
 
                     b.Property<decimal>("GoalAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("GoalUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");

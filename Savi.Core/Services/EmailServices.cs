@@ -37,7 +37,7 @@ namespace Savi.Core.Services
 
                     using (var client = new SmtpClient())
                     {
-                        await client.ConnectAsync(emailSettings.Host, emailSettings.Port, SecureSocketOptions.StartTls);
+                        await client.ConnectAsync(emailSettings.Host, emailSettings.Port, SecureSocketOptions.SslOnConnect);
                         await client.AuthenticateAsync(emailSettings.Email, emailSettings.Password);
                         await client.SendAsync(message);
                     }

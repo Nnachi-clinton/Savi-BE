@@ -18,11 +18,10 @@ namespace Savi.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("SetGoal/{userId}")]
-        public async Task<IActionResult> AddMoreGoals([FromBody] PersonalSavingsDTO saving, string userId)
+        [HttpPost("SetGoal")]
+        public async Task<IActionResult> AddMoreGoals([FromForm] PersonalSavingsDTO saving, string userId)
         {
-            var personalSaving = _mapper.Map<Saving>(saving);
-            var response = await _personalSavings.SetPersonal_Savings_Target(personalSaving, userId);
+            var response = await _personalSavings.SetPersonal_Savings_Target(saving, userId);
             if (response.StatusCode == 200)
             {
                 return Ok(response);

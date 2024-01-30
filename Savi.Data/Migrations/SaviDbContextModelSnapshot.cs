@@ -496,6 +496,9 @@ namespace Savi.Data.Migrations
                     b.Property<decimal>("AmountToAdd")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<bool>("AutoSave")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
 
@@ -513,6 +516,9 @@ namespace Savi.Data.Migrations
 
                     b.Property<decimal>("GoalAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("GoalUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
