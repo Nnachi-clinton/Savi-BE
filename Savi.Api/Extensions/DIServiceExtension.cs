@@ -32,6 +32,7 @@ namespace Savi.Api.Extensions
             services.AddScoped<IKycService, KycService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFundingService, FundingService>();
             services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<SaviDbContext>()
             .AddDefaultTokenProviders();

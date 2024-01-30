@@ -52,5 +52,18 @@ namespace Savi.Api.Controllers
                 _ => BadRequest(response),
             };
         }
+
+        [HttpGet("totalGoalAmount/{userId}")]
+        public async Task<IActionResult> GetTotalGoalAmountByUser(string userId)
+        {
+            var response = await _personalSavings.GetTotalGoalAmountByUser(userId);
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response),
+            };
+        }
     }
 }

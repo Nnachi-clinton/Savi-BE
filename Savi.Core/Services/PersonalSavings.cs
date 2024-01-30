@@ -135,7 +135,7 @@ namespace Savi.Core.Services
         public async Task<ResponseDto<Saving>> GetPersonalSavingsById(string personalSavingsId)
         {
             var response = new ResponseDto<Saving>();
-            
+
             try
             {
                 var personalSavings = await _savingRepository.GetSavingByIdAsync(personalSavingsId);
@@ -156,6 +156,33 @@ namespace Savi.Core.Services
 
             return response;
         }
+
+        public async Task<ResponseDto<decimal>> GetTotalGoalAmountByUser(string userId)
+        {
+            var response = new ResponseDto<decimal>();
+
+            try
+            {
+                var listOfTargets = await _savingRepository.GetAllSetSavingsByUserId(userId);
+
+                if (listOfTargets.Any())
+                {
+                    var totalGoalAmount = listOfTargets.Sum(target => target.AmountSaved);
+                    SetSuccessResponse(response, "Total goal amount retrieved successfully", totalGoalAmount, 200);
+                }
+                else
+                {
+                    SetNotFoundResponse(response, "No targets found for the user", 404);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetErrorResponse(response, ex.Message, 500);
+            }
+
+            return response;
+        }
+
     }
 
 
