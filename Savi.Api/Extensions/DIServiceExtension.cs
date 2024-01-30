@@ -41,6 +41,7 @@ namespace Savi.Api.Extensions
             services.AddScoped<IPersonalSavings, PersonalSavings>();
             services.AddScoped<ISavingRepository, SavingRepository>();
             services.AddScoped<IWalletServices, WalletServices>();
+            services.AddScoped<IWalletService, WalletService>();
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

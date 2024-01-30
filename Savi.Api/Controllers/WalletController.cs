@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Core.Services;
+using Savi.Model;
 
 namespace Savi.Api.Controllers
 {
@@ -9,10 +11,12 @@ namespace Savi.Api.Controllers
     public class WalletController : ControllerBase
     {
         private readonly IWalletServices _walletServices;
+		private readonly IWalletService _walletService;
 
-        public WalletController(IWalletServices walletServices)
+        public WalletController(IWalletServices walletServices, IWalletService walletService)
         {
             _walletServices = walletServices;
+			_walletService = walletService;
         }
 
         [HttpGet]
@@ -30,5 +34,39 @@ namespace Savi.Api.Controllers
             var response =  _walletServices.GetUserWalletAsync(userId);
             return Ok(response);
         }
-    }
+
+		[HttpGet("GetAllWallets")]
+		public async Task<IActionResult> AllWallets()
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ApiResponse<string>.Failed(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+			}
+
+			return Ok(await _walletService.GetAllWallets());
+		}
+
+		[HttpGet("GetWalletByNumber")]
+		public async Task<IActionResult> GetWalletByNumber(string number)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ApiResponse<string>.Failed(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+			}
+
+			return Ok(await _walletService.GetWalletByNumber(number));
+		}
+
+
+		[HttpPost("FundWallet")]
+		public async Task<IActionResult> FundWallet(FundWalletDto fundWalletDto)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ApiResponse<string>.Failed(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+			}
+
+			return Ok(await _walletService.FundWallet(fundWalletDto));
+		}
+	}
 }

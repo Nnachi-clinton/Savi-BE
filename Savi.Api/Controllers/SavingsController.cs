@@ -39,5 +39,18 @@ namespace Savi.Api.Controllers
             }
             return BadRequest(response);
         }
+
+        [HttpGet("getPersonalSavings/{personalSavingsId}")]
+        public async Task<IActionResult> GetPersonalSavingsById(string personalSavingsId)
+        {
+            var response = await _personalSavings.GetPersonalSavingsById(personalSavingsId);
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response),
+            };
+        }
     }
 }
