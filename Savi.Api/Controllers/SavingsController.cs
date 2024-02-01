@@ -19,9 +19,9 @@ namespace Savi.Api.Controllers
         }
 
         [HttpPost("SetGoal")]
-        public async Task<IActionResult> AddMoreGoals([FromForm] PersonalSavingsDTO saving, string userId)
+        public async Task<IActionResult> AddMoreGoals([FromForm] PersonalSavingsDTO saving)
         {
-            var response = await _personalSavings.SetPersonal_Savings_Target(saving, userId);
+            var response = await _personalSavings.SetPersonal_Savings_Target(saving, saving.UserId);
             if (response.StatusCode == 200)
             {
                 return Ok(response);

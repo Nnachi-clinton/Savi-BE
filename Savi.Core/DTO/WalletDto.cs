@@ -10,6 +10,6 @@ namespace Savi.Core.DTO
         public string Reference { get; set; }
         public string PaystackCustomerCode { get; set; }
         public string AppUserId { get; set; }
-        //public string TransactionPin { get; set; }
+        public string Id { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using Savi.Data.Repositories.Interface;
 using Savi.Data.UnitOfWork;
 using Savi.Model.Entities;
 using Savi.Api.AutoMapperProfile;
+using Hangfire;
 
 namespace Savi.Api.Extensions
 {
@@ -64,6 +65,9 @@ namespace Savi.Api.Extensions
             //    return new WalletServices(configuration);
             //});
             services.AddTransient<WalletServices>();
+            services.AddHangfire(confi => confi.UseSqlServerStorage(config.GetConnectionString("DefaultConnection")));
+            services.AddHangfireServer();
+            services.AddScoped<IAutoSaveBackgroundService,AutoSaveBackgroundService>();
 
         }
     }

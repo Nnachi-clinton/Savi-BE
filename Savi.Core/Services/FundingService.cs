@@ -2,6 +2,8 @@
 using Savi.Core.IServices;
 using Savi.Data.Context;
 using Savi.Data.Repositories.Interface;
+using Savi.Data.UnitOfWork;
+using Savi.Model.Entities;
 namespace Savi.Core.Services
 {
     public class FundingService : IFundingService
@@ -64,6 +66,16 @@ namespace Savi.Core.Services
                 }
                 wallet.Balance -= amount;
                 _unitOfWork.WalletRepository.UpdateWalletAsync(wallet);
+                var walletFunding = new WalletFunding()
+                {
+                    FundAmount = amount,                   
+                    WalletNumber = wallet.WalletNumber,
+                    WalletId = wallet.Id,
+                    Narration = "savings for personal goal",
+                    CumulativeAmount = wallet.Balance,
+                    TransactionType = Model.Enums.TransactionType.Debit,
+                };
+                await _unitOfWork.WalletFundingRepository.AddAsync(walletFunding);             
                 _unitOfWork.SaveChanges();
                 return true;
             }
