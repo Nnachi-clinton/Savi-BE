@@ -35,5 +35,23 @@ namespace Savi.Api.Controllers
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+        [HttpPost("DebitPersonalTarget")]
+        public async Task<IActionResult> DebitPersonalTarget([FromBody] DebitSavingsTargetRequestDto request)
+        {
+            try
+            {
+                bool result = await _fundingService.DebitPersonalTarget(request.WalletId, request.SavingsGoalId, request.Amount);               
+
+                if (!result)
+                {
+                    return BadRequest("Unable to debit the personal target.");
+                }
+                return Ok("Personal target debited successfully.");
+            }
+            catch (Exception ex)
+            {               
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
     }
 }

@@ -95,6 +95,82 @@ namespace Savi.Core.Services
                 throw;
             }
         }
+        public async Task<bool> DebitPersonalTarget(string walletId, string savingsGoalId, decimal amount)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    if (!await DebitSavingsGoal(savingsGoalId, amount))
+                    {
+                        _logger.LogWarning($"Failed to debit savings goal {savingsGoalId} for amount: {amount}");
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+
+                    if (!await CreditWallet(walletId, amount))
+                    {
+                        _logger.LogWarning($"Failed to credit wallet {walletId} for amount: {amount}");
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    _logger.LogError($"Error occurred during fund reverse transfer: {ex}");
+                    throw;
+                }
+            }
+        }
+
+        public async Task<bool> DebitSavingsGoal(string savingsGoalId, decimal amount)
+        {
+            try
+            {
+                var savingsGoal = await _unitOfWork.SavingRepository.GetSavingByIdAsync(savingsGoalId);
+                if (savingsGoal == null || savingsGoal.AmountSaved < amount)
+                {
+                    return false;
+                }
+
+                savingsGoal.AmountSaved -= amount;
+                _unitOfWork.SavingRepository.UpdateSavingAsync(savingsGoal);
+                _unitOfWork.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error debiting savings goal {savingsGoalId}: {ex}");
+                throw;
+            }
+        }
+
+        public async Task<bool> CreditWallet(string walletId, decimal amount)
+        {
+            try
+            {
+                var wallet = await _unitOfWork.WalletRepository.GetWalletByIdAsync(walletId);
+                if (wallet == null)
+                {
+                    return false;
+                }
+
+                wallet.Balance += amount;
+                _unitOfWork.WalletRepository.UpdateWalletAsync(wallet);
+                _unitOfWork.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error crediting wallet {walletId}: {ex}");
+                throw;
+            }
+        }
+
     }
 
 }
