@@ -8,7 +8,7 @@
 
         public bool IsGroupOwner { get; set; }
 
-        public int Positions { get; set; } = 1;
+        public int Positions { get; set; }
 
         public DateTime LastsavingDate { get; set; }
         public bool IsPaid { get; set; }
