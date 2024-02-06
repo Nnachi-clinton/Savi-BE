@@ -54,7 +54,83 @@ namespace Savi.Core.Services
                     StatusCode = 500
                 };
             }        
-        }       
+        }
+
+        public ResponseDto<GroupDTO> GetExploreGroupSavingDetails(string groupId)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(groupId));
+            try
+            {
+                var group = _unitOfWork.GroupRepository.GetById(groupId);
+                ArgumentNullException.ThrowIfNull(group);
+                if (group.GroupStatus == GroupStatus.Waiting)
+                {
+                    var mappedExploreGroup = _IMapper.Map<GroupDTO>(group);
+                    return new ResponseDto<GroupDTO>()
+                    {
+                        DisplayMessage = "Success",
+                        Result = mappedExploreGroup,
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ResponseDto<GroupDTO>()
+                    {
+                        DisplayMessage = $"{group.SaveName} has been updated to {group.GroupStatus} status.",
+                        Result = null,
+                        StatusCode = 404
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<GroupDTO>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+        }
+
+        public ResponseDto<GroupDTO> GetGroupSavingAccountDetails(string groupId)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(groupId));
+            try
+            {
+                var group = _unitOfWork.GroupRepository.GetById(groupId);
+                ArgumentNullException.ThrowIfNull(group);
+                if (group.GroupStatus == GroupStatus.OnGoing)
+                {
+                    var mappedExploreGroup = _IMapper.Map<GroupDTO>(group);
+                    return new ResponseDto<GroupDTO>()
+                    {
+                        DisplayMessage = "Success",
+                        Result = mappedExploreGroup,
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ResponseDto<GroupDTO>()
+                    {
+                        DisplayMessage = $"{group.SaveName} has been updated to {group.GroupStatus} status.",
+                        Result = null,
+                        StatusCode = 404
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<GroupDTO>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }
     

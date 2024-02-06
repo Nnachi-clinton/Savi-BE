@@ -9,6 +9,8 @@ namespace Savi.Model.Entities
         public string Description { get; set; } = string.Empty;
         public decimal GoalAmount { get; set; }
         public decimal AmountSaved { get; set; }
+        public bool AutoSave { get; set; } = false;
+        public string GoalUrl { get; set; }
         public string Purpose { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }

@@ -1,4 +1,5 @@
-﻿using Savi.Model.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using Savi.Model.Enums;
 
 namespace Savi.Core.DTO
 {
@@ -11,5 +12,8 @@ namespace Savi.Core.DTO
         public decimal TargetAmount { get; set; }
         public FundFrequency FundFrequency { get; set; }
         public string TargetName { get; set; }
+        public IFormFile GoalUrl { get; set; }
+        public bool AutoSave { get; set; }
+        public string UserId { get; set; }
     }
 }

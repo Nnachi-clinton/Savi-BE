@@ -1,4 +1,5 @@
-﻿using Savi.Core.DTO;
+﻿using AutoMapper;
+using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Data.Repositories.Interface;
 using Savi.Model.Entities;
@@ -9,13 +10,17 @@ namespace Savi.Core.Services
     public class PersonalSavings : IPersonalSavings
     {
         private readonly ISavingRepository _savingRepository;
+        private readonly ICloudinaryServices<Saving> _cloudinaryServices;
+        private readonly IMapper _mapper;
 
-        public PersonalSavings(ISavingRepository savingRepository)
+        public PersonalSavings(ISavingRepository savingRepository, ICloudinaryServices<Saving> cloudinaryServices, IMapper mapper)
         {
             _savingRepository = savingRepository;
+            _cloudinaryServices = cloudinaryServices;
+            _mapper = mapper;
         }
 
-        public async Task<ResponseDto<string>> SetPersonal_Savings_Target(Saving saving, string userId)
+        public async Task<ResponseDto<string>> SetPersonal_Savings_Target(PersonalSavingsDTO saving, string userId)
         {
             var response = new ResponseDto<string>();
 
@@ -36,10 +41,10 @@ namespace Savi.Core.Services
                         multiplier = 1;
                         break;
                     case FundFrequency.Weekly:
-                        multiplier = 6;
+                        multiplier = 7;
                         break;
                     default:
-                        multiplier = 30;
+                        multiplier = 31;
                         break;
                 }
 
@@ -48,16 +53,20 @@ namespace Savi.Core.Services
                 saving.EndDate = DateTime.Now.AddDays(z);
                 saving.WithdrawalDate = saving.EndDate.AddDays(1);
                 saving.UserId = userId;
+                var personalSaving = _mapper.Map<Saving>(saving);
 
-                var newTarget = await _savingRepository.CreateSavings(saving);
-
+                var newTarget = await _savingRepository.CreateSavings(personalSaving);
+                var goalUrl = await _cloudinaryServices.UploadImage(personalSaving.Id, saving.GoalUrl);
+                personalSaving.GoalUrl = goalUrl;
+                 _savingRepository.UpdateAsync(personalSaving);
+                await _savingRepository.SaveChangesAsync();
                 if (newTarget)
                 {
-                    SetSuccessResponse(response, $"Your target of amount {saving.TargetAmount} has been successfully created", 200);
+                    SetSuccessResponse(response, $"Your target of amount {personalSaving.TargetAmount} has been successfully created", 200);
                 }
                 else
                 {
-                    SetErrorResponse(response, $"Unable to create target of amount {saving.TargetAmount}", 400);
+                    SetErrorResponse(response, $"Unable to create target of amount {personalSaving.TargetAmount}", 400);
                 }
 
                 return response;

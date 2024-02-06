@@ -2,6 +2,8 @@
 using Savi.Core.IServices;
 using Savi.Data.Context;
 using Savi.Data.Repositories.Interface;
+using Savi.Data.UnitOfWork;
+using Savi.Model.Entities;
 namespace Savi.Core.Services
 {
     public class FundingService : IFundingService
@@ -58,12 +60,22 @@ namespace Savi.Core.Services
             try
             {
                 var wallet = await _unitOfWork.WalletRepository.GetWalletByIdAsync(walletId);
-                if (wallet == null || wallet.Balance < amount)
+                if (wallet == null || wallet.Balance < amount || amount <= 0)
                 {
                     return false;
                 }
                 wallet.Balance -= amount;
                 _unitOfWork.WalletRepository.UpdateWalletAsync(wallet);
+                var walletFunding = new WalletFunding()
+                {
+                    FundAmount = amount,                   
+                    WalletNumber = wallet.WalletNumber,
+                    WalletId = wallet.Id,
+                    Narration = "savings for personal goal",
+                    CumulativeAmount = wallet.Balance,
+                    TransactionType = Model.Enums.TransactionType.Debit,
+                };
+                await _unitOfWork.WalletFundingRepository.AddAsync(walletFunding);             
                 _unitOfWork.SaveChanges();
                 return true;
             }
@@ -126,13 +138,12 @@ namespace Savi.Core.Services
                 }
             }
         }
-
         public async Task<bool> DebitSavingsGoal(string savingsGoalId, decimal amount)
         {
             try
             {
                 var savingsGoal = await _unitOfWork.SavingRepository.GetSavingByIdAsync(savingsGoalId);
-                if (savingsGoal == null || savingsGoal.AmountSaved < amount)
+                if (savingsGoal == null || savingsGoal.AmountSaved < amount || amount <= 0)
                 {
                     return false;
                 }
@@ -148,7 +159,6 @@ namespace Savi.Core.Services
                 throw;
             }
         }
-
         public async Task<bool> CreditWallet(string walletId, decimal amount)
         {
             try
@@ -161,6 +171,16 @@ namespace Savi.Core.Services
 
                 wallet.Balance += amount;
                 _unitOfWork.WalletRepository.UpdateWalletAsync(wallet);
+                var walletFunding = new WalletFunding()
+                {
+                    FundAmount = amount,
+                    WalletNumber = wallet.WalletNumber,
+                    WalletId = wallet.Id,
+                    Narration = "Credited from personal goal",
+                    CumulativeAmount = wallet.Balance,
+                    TransactionType = Model.Enums.TransactionType.Credit,
+                };
+                await _unitOfWork.WalletFundingRepository.AddAsync(walletFunding);
                 _unitOfWork.SaveChanges();
                 return true;
             }

@@ -16,6 +16,7 @@ namespace Savi.Core.DTO
         public DateTime ExpectedStartDate { get; set; }
         public int MemberCount { get; set; }
         public DateTime RunTime { get; set; }
+        public DateTime ActualStartDate { get; set; }
         public GroupStatus GroupStatus { get; set; }
         public string SafePortraitImageURL { get; set; }
         public string TermsAndCondition { get; set; }

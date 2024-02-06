@@ -135,7 +135,8 @@ namespace Savi.Core.Services
                 AppUserId = wallet.AppUserId,
                 Reference = wallet.Reference,
                 Balance = wallet.Balance,
-                WalletNumber = wallet.WalletNumber
+                WalletNumber = wallet.WalletNumber,
+                Id = wallet.Id,
             };
             return new ResponseDto<WalletDto>()
             {

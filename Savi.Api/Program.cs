@@ -1,6 +1,9 @@
+using Hangfire;
 using Savi.Api.AutoMapperProfile;
 using Savi.Api.Configurations;
 using Savi.Api.Extensions;
+using Savi.Core.IServices;
+using Savi.Core.Services;
 using Savi.Data.Seeder;
 
 namespace Savi.Api
@@ -66,8 +69,12 @@ namespace Savi.Api
             app.UseCors("AllowAllOrigins");
 
             app.UseAuthorization();
+            app.UseHangfireDashboard();
 
-
+            RecurringJob.AddOrUpdate<IAutoSaveBackgroundService>(
+                "auto-save-task",
+                x => x.CheckAndExecuteAutoSaveTask(),
+                "0 10 * * *");
             app.MapControllers();
 
             app.Run();
