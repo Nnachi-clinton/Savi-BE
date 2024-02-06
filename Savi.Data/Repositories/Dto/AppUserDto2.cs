@@ -1,6 +1,6 @@
 ﻿namespace Savi.Data.Repository.DTO
 {
-    public class AppUserDto
+    public class AppUserDto2
     {
         public string Id { get; set; }
         public string FirstName { get; set; }

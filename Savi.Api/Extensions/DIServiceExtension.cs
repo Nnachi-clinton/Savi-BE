@@ -41,6 +41,7 @@ namespace Savi.Api.Extensions
             services.AddDbContext<SaviDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPersonalSavings, PersonalSavings>();
+            services.AddScoped<IGroupSavings, GroupSavings>();
             services.AddScoped<ISavingRepository, SavingRepository>();
             services.AddScoped<IWalletServices, WalletServices>();
             services.AddScoped<IWalletService, WalletService>();
@@ -68,6 +69,8 @@ namespace Savi.Api.Extensions
             services.AddHangfire(confi => confi.UseSqlServerStorage(config.GetConnectionString("DefaultConnection")));
             services.AddHangfireServer();
             services.AddScoped<IAutoSaveBackgroundService,AutoSaveBackgroundService>();
+            services.AddScoped<IGroupSavingsMembersServices, GroupSavingsMembersServices>();
+            services.AddScoped<IGroupSavingsMembersRepository, GroupSavingsMembersRepository>();
 
         }
     }
