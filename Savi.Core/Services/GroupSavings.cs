@@ -61,11 +61,11 @@ namespace Savi.Core.Services
             ArgumentNullException.ThrowIfNull(nameof(groupId));
             try
             {
-                var exploreGroupSavingGroups = _unitOfWork.GroupRepository.GetById(groupId);
-                ArgumentNullException.ThrowIfNull(exploreGroupSavingGroups);
-                if (exploreGroupSavingGroups.GroupStatus == GroupStatus.Waiting)
+                var group = _unitOfWork.GroupRepository.GetById(groupId);
+                ArgumentNullException.ThrowIfNull(group);
+                if (group.GroupStatus == GroupStatus.Waiting)
                 {
-                    var mappedExploreGroup = _IMapper.Map<GroupDTO>(exploreGroupSavingGroups);
+                    var mappedExploreGroup = _IMapper.Map<GroupDTO>(group);
                     return new ResponseDto<GroupDTO>()
                     {
                         DisplayMessage = "Success",
@@ -77,7 +77,7 @@ namespace Savi.Core.Services
                 {
                     return new ResponseDto<GroupDTO>()
                     {
-                        DisplayMessage = "No explore savings group accounts found",
+                        DisplayMessage = $"{group.SaveName} has been updated to {group.GroupStatus} status.",
                         Result = null,
                         StatusCode = 404
                     };
