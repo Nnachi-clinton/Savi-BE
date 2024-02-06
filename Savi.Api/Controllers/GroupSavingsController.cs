@@ -35,7 +35,7 @@ namespace Savi.Api.Controllers
         }
 
         [HttpPost("JoinGroup")]
-        public async Task<IActionResult> JoinExistingGroup(string UserId,  string GroupId)
+        public async Task<IActionResult> JoinExistingGroup(string UserId, string GroupId)
         {
             var response = await _groupSavingsMembersServices.JoinGroupSavingsAsync(UserId, GroupId);
             if (response.StatusCode == 200)
@@ -44,5 +44,23 @@ namespace Savi.Api.Controllers
             }
             return BadRequest(response);
         }
-    }
-}
+
+        [HttpGet("ExploreGroupDetails")]
+        public IActionResult GetExploreGroupSavingDetails(string groupId)
+        {
+            var response = _groupSavings.GetExploreGroupSavingDetails(groupId);
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                500 => StatusCode(500, response),
+                _ => BadRequest(response)
+
+            };
+
+
+        }
+    }    
+    
+}    

@@ -11,5 +11,6 @@ namespace Savi.Core.IServices
     public interface IGroupSavings
     {
         ResponseDto<List<GroupDTO>> GetExploreGroupSavingGroups();
+        ResponseDto<GroupDTO> GetExploreGroupSavingDetails(string groupId);
     }
 }

@@ -54,7 +54,47 @@ namespace Savi.Core.Services
                     StatusCode = 500
                 };
             }        
-        }       
+        }
+
+        public ResponseDto<GroupDTO> GetExploreGroupSavingDetails(string groupId)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(groupId));
+            try
+            {
+                var exploreGroupSavingGroups = _unitOfWork.GroupRepository.GetById(groupId);
+                ArgumentNullException.ThrowIfNull(exploreGroupSavingGroups);
+                if (exploreGroupSavingGroups.GroupStatus == GroupStatus.Waiting)
+                {
+                    var mappedExploreGroup = _IMapper.Map<GroupDTO>(exploreGroupSavingGroups);
+                    return new ResponseDto<GroupDTO>()
+                    {
+                        DisplayMessage = "Success",
+                        Result = mappedExploreGroup,
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ResponseDto<GroupDTO>()
+                    {
+                        DisplayMessage = "No explore savings group accounts found",
+                        Result = null,
+                        StatusCode = 404
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<GroupDTO>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+        }
+
+
     }
 }
     
