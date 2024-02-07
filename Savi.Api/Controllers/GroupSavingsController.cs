@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Savi.Core.DTO;
 using Savi.Core.IServices;
 
 namespace Savi.Api.Controllers
@@ -77,6 +78,27 @@ namespace Savi.Api.Controllers
             };
 
 
+        }
+        [HttpGet("ActiveGroups")]
+        public IActionResult GetActiveGroupSavingsGroups()
+        {
+            var response = _groupSavings.GetListOfActiveSavingsGroups();
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                500 => StatusCode(500, response),
+                _ => BadRequest(response)
+            };
+        }
+
+
+        [HttpPost("CreateGroupSavings")]
+        public async Task<IActionResult> CreateNewGroupSavingAsync([FromForm] GroupDTO2 groupDTO)
+        {
+            var response = await _groupSavings.CreateSavingsGroup(groupDTO);
+            return Ok(response);
         }
     }    
     

@@ -1,4 +1,5 @@
-﻿using Savi.Core.DTO;
+﻿using Microsoft.AspNetCore.Http;
+using Savi.Core.DTO;
 using Savi.Model.Entities;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,7 @@ namespace Savi.Core.IServices
         ResponseDto<List<GroupDTO>> GetExploreGroupSavingGroups();
         ResponseDto<GroupDTO> GetExploreGroupSavingDetails(string groupId);
         ResponseDto<GroupDTO> GetGroupSavingAccountDetails(string groupId);
+        ResponseDto<List<GroupDTO>> GetListOfActiveSavingsGroups();
+        Task<ResponseDto<string>> CreateSavingsGroup(GroupDTO2 dto);
     }
 }

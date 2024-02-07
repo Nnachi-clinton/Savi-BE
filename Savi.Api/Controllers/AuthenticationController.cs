@@ -136,6 +136,16 @@ namespace Savi.Api.Controllers
             }
             return Ok(await _authenticationService.VerifyAndAuthenticateUserAsync(token));
         }
+
+        [HttpPut("updateUserInformation")]
+        public async Task<IActionResult> UpdateUserInformation(string userId, IFormFile formFile)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<string>(false, "Invalid model state.", StatusCodes.Status400BadRequest, ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).ToList()));
+            }
+            return Ok(await _authenticationService.UpdateUserInformation(userId, formFile));
+        }
     }
 }
     
