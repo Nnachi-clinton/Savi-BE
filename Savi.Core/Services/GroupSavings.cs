@@ -35,7 +35,7 @@ namespace Savi.Core.Services
             {
                 //var exploreGroupSavingGroups =  _unitOfWork.GroupRepository.GetAll();
                 //var waitingGroups = exploreGroupSavingGroups.Where(groupDto => groupDto.GroupStatus == GroupStatus.Waiting).ToList();
-                var waitingGroups = _unitOfWork.GroupRepository.GetAll(groupDto => groupDto.GroupStatus == GroupStatus.OnGoing);
+                var waitingGroups = _unitOfWork.GroupRepository.GetAll(groupDto => groupDto.GroupStatus == GroupStatus.Waiting);
 
                 if (waitingGroups.Count > 0)
                 {
