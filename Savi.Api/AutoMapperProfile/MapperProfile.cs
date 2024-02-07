@@ -16,6 +16,8 @@ namespace Savi.Api.AutoMapperProfile
             CreateMap<AppUser, AppUserDto2>();
             CreateMap<GroupSavingsMembers, GroupMembersDto2>();
             CreateMap<GroupDTO, Group>().ReverseMap();
+            CreateMap<GroupDTO2, Group>().ReverseMap();
+            CreateMap<AppUserUpdateDto, AppUser>().ReverseMap();
         }
     }
 }

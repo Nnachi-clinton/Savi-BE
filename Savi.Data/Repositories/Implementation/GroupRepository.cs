@@ -15,6 +15,10 @@ namespace Savi.Data.Repositories.Implementation
         {
             await AddAsync(group);
         }
+        public async Task<Group> AddGroupAsync2(Group group)
+        {
+            return  AddAsync2(group);
+        }
 
         public async Task DeleteAllGroupAsync(List<Group> groups)
         {
@@ -39,10 +43,23 @@ namespace Savi.Data.Repositories.Implementation
         {
             return GetAll();
         }
+        public List<Group> GetGroups(Expression<Func<Group, bool>> expression)
+        {
+            return GetAll(expression);
+        }
 
         public void UpdateGroupAsync(Group group)
         {
             UpdateAsync(group);
+        }
+        public async Task<bool> CreateGroup(Group group)
+        {
+            var groups = await CreateAsync(group);
+            if (!groups)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

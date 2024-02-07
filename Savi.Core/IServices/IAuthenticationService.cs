@@ -3,6 +3,7 @@ using Savi.Model;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Savi.Model.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Savi.Core.IServices
 {
@@ -17,5 +18,6 @@ namespace Savi.Core.IServices
         Task<ApiResponse<string>> VerifyAndAuthenticateUserAsync(string idToken);
         Task<ApiResponse<string>> ConfirmEmailAsync(string userId, string token);
         Task<ApiResponse<string>> ResendEmailVerifyLink(string userId);
+        Task<ApiResponse<string>> UpdateUserInformation(string userId, IFormFile formFile);
     }
 }

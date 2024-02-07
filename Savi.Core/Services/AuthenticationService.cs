@@ -1,12 +1,16 @@
-﻿using Google.Apis.Auth;
+﻿using AutoMapper;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using Savi.Core.DTO;
 using Savi.Core.IServices;
+using Savi.Data.Context;
 using Savi.Model;
 using Savi.Model.Entities;
 using System.ComponentModel.DataAnnotations;
@@ -26,8 +30,10 @@ namespace Savi.Core.Services
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailServices _emailService;
         private readonly IWalletServices services;
+        private readonly SaviDbContext _saviDbContext;
+        private readonly ICloudinaryServices<AppUser> _cloudinaryServices;
 
-        public AuthenticationService(IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IOptions<EmailSettings> emailSettings, ILogger<AuthenticationService> logger, IEmailServices emailService, IWalletServices services)
+        public AuthenticationService(IConfiguration config, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IOptions<EmailSettings> emailSettings, ILogger<AuthenticationService> logger, IEmailServices emailService, IWalletServices services, SaviDbContext saviDbContext, ICloudinaryServices<AppUser> cloudinaryServices)
         {
             _config = config;
             _userManager = userManager;
@@ -37,6 +43,8 @@ namespace Savi.Core.Services
             _signInManager = signInManager;
             _emailService = emailService;
             this.services = services;
+            _saviDbContext = saviDbContext;
+            _cloudinaryServices = cloudinaryServices;
         }
         public async Task<ApiResponse<string>> LoginAsync(AppUserLoginDTO loginDTO)
         {
@@ -344,6 +352,46 @@ namespace Savi.Core.Services
                 return new ApiResponse<string>(false, "Error occurred while authenticating user", StatusCodes.Status500InternalServerError);
             }
         }
+    
+
+        public async Task<ApiResponse<string>> UpdateUserInformation(string userId, IFormFile formFile)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(nameof(userId));
+                ArgumentNullException.ThrowIfNull(nameof(formFile));
+
+                var userExist = await _saviDbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+                if (userExist == null)
+                {
+                    return new ApiResponse<string>(false, "User not found", StatusCodes.Status404NotFound);
+                }
+
+                var image = await _cloudinaryServices.UploadImage(userId, formFile);
+
+                // Update user's image URL
+                userExist.ImageUrl = image;
+
+                var result = await _userManager.UpdateAsync(userExist);
+
+                if (result.Succeeded)
+                {
+                    return new ApiResponse<string>(true, "Account Updated successfully", StatusCodes.Status200OK);
+                }
+                return new ApiResponse<string>(false, "Failed to update account", StatusCodes.Status400BadRequest);
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogError(ex, "Argument is null");
+                return new ApiResponse<string>(false, "Argument is null", StatusCodes.Status400BadRequest);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while updating user");
+                return new ApiResponse<string>(false, "Error occurred while updating user", StatusCodes.Status500InternalServerError);
+            }
+        }
+
     }
 }
 

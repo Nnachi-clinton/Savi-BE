@@ -6,7 +6,10 @@ namespace Savi.Data.Repositories.Interface
     public interface IGroupRepository : IGenericRepository<Group>
     {
         List<Group> GetGroupsAsync();
+        List<Group> GetGroups(Expression<Func<Group, bool>> expression);
+        Task<bool> CreateGroup(Group group);
         Task AddGroupAsync(Group group);
+        Task<Group> AddGroupAsync2(Group group);
         Task DeleteGroupAsync(Group group);
         Task DeleteAllGroupAsync(List<Group> groups);
         void UpdateGroupAsync(Group group);
