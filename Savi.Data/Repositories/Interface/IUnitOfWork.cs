@@ -11,6 +11,7 @@
         ISavingRepository SavingRepository { get; }
         IWalletFundingRepository WalletFundingRepository { get; }
         IWalletRepository WalletRepository { get; }
+        IFundingAnalyticsRepository FundingAnalyticsRepository { get; }
         int SaveChanges();
     }
 }

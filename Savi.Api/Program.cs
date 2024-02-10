@@ -4,7 +4,7 @@ using Savi.Api.Configurations;
 using Savi.Api.Extensions;
 using Savi.Core.IServices;
 using Savi.Core.Services;
-using Savi.Data.Seeder;
+using Savi.Utility;
 
 namespace Savi.Api
 {
@@ -57,11 +57,16 @@ namespace Savi.Api
                 app.UseSwagger();
                 app.UseSwaggerUI( c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Savi v1"));
             }
-            using (var scope = app.Services.CreateScope())
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var serviceprovider = scope.ServiceProvider;
+            //    Seeder.SeedRolesAndAdminUser(serviceprovider);
+            //}
+            using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var serviceprovider = scope.ServiceProvider;
-                Seeder.SeedRolesAndSuperAdmin(serviceprovider);
+                Seeder.SeedRolesAndAdminUser(scope.ServiceProvider).Wait(); 
             }
+
             app.UseCors(p => p.AllowAnyOrigin()
                 .AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
@@ -75,6 +80,10 @@ namespace Savi.Api
                 "auto-save-task",
                 x => x.CheckAndExecuteAutoSaveTask(),
                 "0 10 * * *");
+            RecurringJob.AddOrUpdate<IFundingAnalyticsBackgroundServices>(
+                "swc-funding-analytics",
+                x => x.SWCFunding(),
+                "0 2 * * *");
             app.MapControllers();
 
             app.Run();

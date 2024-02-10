@@ -20,6 +20,7 @@ namespace Savi.Data.UnitOfWork
             SavingRepository = new SavingRepository(_context);
             WalletFundingRepository = new WalletFundingRepository(_context);
             WalletRepository = new WalletRepository(_context);
+            FundingAnalyticsRepository = new FundingAnalyticsRepository(_context);
         }
 
         public IAppUserTransactionRepository AppUserTransactionRepository { get; private set; }
@@ -39,6 +40,8 @@ namespace Savi.Data.UnitOfWork
         public IWalletFundingRepository WalletFundingRepository {get; private set;}
 
         public IWalletRepository WalletRepository {get; private set;}
+
+        public IFundingAnalyticsRepository FundingAnalyticsRepository { get; private set;}
 
         public void Dispose()
         {

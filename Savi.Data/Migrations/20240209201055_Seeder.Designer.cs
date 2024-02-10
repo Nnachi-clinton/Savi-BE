@@ -12,8 +12,8 @@ using Savi.Data.Context;
 namespace Savi.Data.Migrations
 {
     [DbContext(typeof(SaviDbContext))]
-    [Migration("20240204193050_GroupSavingsMember")]
-    partial class GroupSavingsMember
+    [Migration("20240209201055_Seeder")]
+    partial class Seeder
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

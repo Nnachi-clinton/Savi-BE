@@ -339,6 +339,35 @@ namespace Savi.Data.Migrations
                     b.ToTable("CardDetails");
                 });
 
+            modelBuilder.Entity("Savi.Model.Entities.FundingAnalytics", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Contribution")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Savings")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Withrawal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FundingAnalytics");
+                });
+
             modelBuilder.Entity("Savi.Model.Entities.Group", b =>
                 {
                     b.Property<string>("Id")

@@ -22,6 +22,7 @@ namespace Savi.Data.Context
         public DbSet<Wallet> Wallets { get; set; }
         public DbSet<WalletFunding> WalletFundings { get; set; }
         public DbSet<GroupSavingsMembers> GroupSavingsMembers { get; set; }
+        public DbSet<FundingAnalytics> FundingAnalytics { get; set; }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var item in ChangeTracker.Entries<BaseEntity>())

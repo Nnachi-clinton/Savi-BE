@@ -60,11 +60,13 @@ namespace Savi.Core.Services
                 }
                 if (await _userManager.CheckPasswordAsync(user, loginDTO.Password))
                 {
+                    var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
                     var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Role, role),
             };
                     var jwtToken = GetToken(authClaims);
                     return ApiResponse<string>.Success(new JwtSecurityTokenHandler().WriteToken(jwtToken), "Login successful", 200);
@@ -224,6 +226,7 @@ namespace Savi.Core.Services
                 {
                     return new ApiResponse<string>(false, "User unable to register.", StatusCodes.Status400BadRequest, new List<string> { "User unable to register." });
                 }
+                await _userManager.AddToRoleAsync(appUser, "User");
                 var emailConfirmationLink = GenerateEmailConfirmationLink(appUser.Id, appUser.EmailConfirmationToken);
 
 
