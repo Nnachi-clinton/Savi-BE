@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Math.EC.Multiplier;
 using Savi.Core.DTO;
 using Savi.Core.IServices;
@@ -7,6 +8,7 @@ using Savi.Data.Repositories.Interface;
 using Savi.Model.Entities;
 using Savi.Model.Enums;
 using System.Net;
+using System.Text;
 
 namespace Savi.Core.Services
 {
@@ -15,15 +17,18 @@ namespace Savi.Core.Services
         private readonly IGroupSavingsMembersRepository _groupSavingsMembersRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<GroupSavingsMembersServices> _logger;
+        private readonly UserManager<AppUser> _userManager;
 
 
-        public GroupSavingsMembersServices(IGroupSavingsMembersRepository groupSavingsMembersRepository, IUnitOfWork unitOfWork, ILogger<GroupSavingsMembersServices> logger)
+
+        public GroupSavingsMembersServices(IGroupSavingsMembersRepository groupSavingsMembersRepository, IUnitOfWork unitOfWork, ILogger<GroupSavingsMembersServices> logger, UserManager<AppUser> userManager)
         {
             _groupSavingsMembersRepository = groupSavingsMembersRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _userManager = userManager;
         }
-       
+
 
         public async Task<ResponseDto<bool>> JoinGroupSavingsAsync(string userId, string groupId)
         {
@@ -150,6 +155,36 @@ namespace Savi.Core.Services
             //group.MemberCount++;
             _unitOfWork.GroupRepository.UpdateAsync(group);
             _unitOfWork.SaveChanges();
+        }
+
+        public async Task<ResponseDto<Dictionary<string, string>>> GetGroupMembersAsync(string groupId)
+        {
+            var groupExist =  _unitOfWork.GroupRepository.FindGroups(x=>x.Id == groupId);
+            ArgumentNullException.ThrowIfNull(groupExist);
+            var members = new Dictionary<string, string>();
+            foreach(var group in groupExist) 
+            {
+                var users = await _userManager.FindByIdAsync(group.UserId);
+                ArgumentNullException.ThrowIfNull(nameof(users));
+                var Paid =  await _groupSavingsMembersRepository.FindAsync2(x=>x.UserId == group.UserId);
+                var isPaid = Paid?.IsPaid ?? false;
+                members.Add($"{users.FirstName} {users.LastName}", $"{(isPaid ? "Paid" : "UnPaid")}");
+            } 
+            if (members.Count == 0)
+            {
+                return new ResponseDto<Dictionary<string, string>>()
+                {
+                    DisplayMessage = $"No members found for group with ID {groupId}",
+                    StatusCode = 201,
+                    Result = null
+                };
+            }
+            return new ResponseDto<Dictionary<string, string>>()
+            {
+                DisplayMessage = $"{members.Count} {(members.Count == 1 ? "Member" : "Members")} found",
+                Result = members,
+                StatusCode = 200
+            };
         }
 
     }

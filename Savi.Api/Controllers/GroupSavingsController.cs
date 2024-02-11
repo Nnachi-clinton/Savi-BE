@@ -100,6 +100,16 @@ namespace Savi.Api.Controllers
             var response = await _groupSavings.CreateSavingsGroup(groupDTO);
             return Ok(response);
         }
+        [HttpGet("GetMembers")]
+        public async Task<IActionResult> GetGroupMembers(string GroupId)
+        {
+            var response = await _groupSavingsMembersServices.GetGroupMembersAsync(GroupId);
+            if (response.StatusCode == 200)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
     }    
     
 }    

@@ -6,6 +6,7 @@ using Savi.Data.Context;
 using Savi.Data.Repositories.Interface;
 using Savi.Data.Repository.DTO;
 using Savi.Model.Entities;
+using System.Linq.Expressions;
 
 namespace Savi.Data.Repositories.Implementation
 {
@@ -94,6 +95,15 @@ namespace Savi.Data.Repositories.Implementation
             }
             return false;
         }
-        
+        public List<GroupSavingsMembers> FindAsync(Expression<Func<GroupSavingsMembers, bool>> expression)
+        {
+            return _saviDbContext.Set<GroupSavingsMembers>().Where(expression).ToList();
+        }
+        public async Task<GroupSavingsMembers> FindAsync2(Expression<Func<GroupSavingsMembers, bool>> expression)
+        {
+            return await _saviDbContext.Set<GroupSavingsMembers>().FirstOrDefaultAsync(expression);
+        }
+
+
     }
 }
