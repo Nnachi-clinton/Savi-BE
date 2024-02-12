@@ -12,8 +12,8 @@ using Savi.Data.Context;
 namespace Savi.Data.Migrations
 {
     [DbContext(typeof(SaviDbContext))]
-    [Migration("20240130182128_Another")]
-    partial class Another
+    [Migration("20240207105008_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -347,6 +347,9 @@ namespace Savi.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("ActualStartDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
 
@@ -362,6 +365,15 @@ namespace Savi.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("ExpectedEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpectedStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupStatus")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -374,24 +386,83 @@ namespace Savi.Data.Migrations
                     b.Property<int>("MaxNumberOfParticipants")
                         .HasColumnType("int");
 
+                    b.Property<int>("MemberCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("NextDueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("NextRunTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
+                    b.Property<string>("PurposeAndGoal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RunTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SafePortraitImageURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SaveName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Schedule")
                         .HasColumnType("int");
+
+                    b.Property<string>("TermsAndCondition")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("Savi.Model.Entities.GroupSavingsMembers", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GroupSavingsId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsGroupOwner")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastsavingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Positions")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GroupSavingsMembers");
                 });
 
             modelBuilder.Entity("Savi.Model.Entities.GroupTransaction", b =>
