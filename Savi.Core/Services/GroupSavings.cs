@@ -238,9 +238,42 @@ namespace Savi.Core.Services
                     StatusCode = 500
                 };
             }
+
         }
 
-        
+        public async Task<ResponseDto<int>> GetTotalSavingsGroupCountAsync()
+        {
+            var response = new ResponseDto<int>();
+
+            try
+            {
+                var result = _unitOfWork.SavingRepository.GetAll();
+                return new ResponseDto<int>()
+                {
+                    DisplayMessage = $"{result.Count} Personal group found",
+                    Result = result.Count,
+                    StatusCode = 200,
+                };
+            }
+            catch (Exception ex)
+            {                
+                SetErrorResponse(response, ex.Message, StatusCodes.Status500InternalServerError);               
+            }
+            return response;
+        }
+
+        private void SetSuccessResponse<T>(ResponseDto<T> response, string successMessage, T result, int statusCode)
+        {
+            response.DisplayMessage = "Success";
+            response.Result = result;
+            response.StatusCode = statusCode;
+        }
+        private void SetErrorResponse<T>(ResponseDto<T> response, string errorMessage, int statusCode)
+        {
+            response.DisplayMessage = "Failed";
+            response.Result = default(T);
+            response.StatusCode = statusCode;
+        }
     }
 }
     

@@ -12,8 +12,8 @@ using Savi.Data.Context;
 namespace Savi.Data.Migrations
 {
     [DbContext(typeof(SaviDbContext))]
-    [Migration("20240207105008_Initial")]
-    partial class Initial
+    [Migration("20240212192625_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

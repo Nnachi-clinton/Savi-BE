@@ -68,5 +68,12 @@ namespace Savi.Api.Controllers
 
 			return Ok(await _walletService.FundWallet(fundWalletDto));
 		}
-	}
+
+        [HttpGet("totalbalance")]
+        public async Task<IActionResult> GetTotalCustomerWalletBalanceAsync()
+        {
+            var response = await _walletServices.GetTotalCustomerWalletBalanceAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+    }
 }

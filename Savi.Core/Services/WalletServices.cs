@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Data.Repositories.Interface;
+using Savi.Data.UnitOfWork;
 using Savi.Model;
 using Savi.Model.Entities;
 using Savi.Utility;
@@ -20,7 +21,7 @@ namespace Savi.Core.Services
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
 
-        public WalletServices(ILogger<WalletServices> logger,UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IConfiguration configuration)
+        public WalletServices(ILogger<WalletServices> logger, UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _logger = logger;
             this.userManager = userManager;
@@ -29,7 +30,7 @@ namespace Savi.Core.Services
             _configuration = configuration;
             string secretKey = _configuration["PaystackApi:SecretKey"];
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {secretKey}");
-        }     
+        }
 
 
         public async Task<ApiResponse<string>> CreateWallet(string userId)
@@ -79,11 +80,12 @@ namespace Savi.Core.Services
                     if (result.Status)
                     {
                         var data = result.Data;
-                        if (data.Status == "success")                        {
+                        if (data.Status == "success")
+                        {
                             var amount = data.Amount / 100;
                             var email = data.Customer.Email;
-                           var updateWallet = UpdateWallet(userId, amount); //email to be changed to userId, remember blah
-                             var walletFunding = new WalletFunding()
+                            var updateWallet = UpdateWallet(userId, amount); //email to be changed to userId, remember blah
+                            var walletFunding = new WalletFunding()
                             {
                                 FundAmount = amount,
                                 Reference = referenceCode,
@@ -94,16 +96,16 @@ namespace Savi.Core.Services
                             };
                             await unitOfWork.WalletFundingRepository.AddAsync(walletFunding);
                             unitOfWork.SaveChanges();
-                           return ($"Payment of {amount} Naira from {email} was successful!");
+                            return ($"Payment of {amount} Naira from {email} was successful!");
                         }
                         else
                         {
-                            return($"Payment was not successful. Status: {data.Status}");
+                            return ($"Payment was not successful. Status: {data.Status}");
                         }
                     }
                     else
-                    {                    
-                        return($"Paystack API returned an error. Message: {result.Message}");
+                    {
+                        return ($"Paystack API returned an error. Message: {result.Message}");
                     }
                 }
                 else
@@ -119,13 +121,13 @@ namespace Savi.Core.Services
         }
         public ResponseDto<WalletDto> GetUserWalletAsync(string userId)
         {
-            var wallet =  unitOfWork.WalletRepository.WalletById(userId);
+            var wallet = unitOfWork.WalletRepository.WalletById(userId);
 
             if (wallet == null)
             {
                 return new ResponseDto<WalletDto>()
                 {
-                    StatusCode = 404,                     
+                    StatusCode = 404,
                     DisplayMessage = "User does not have a wallet.",
                 };
             }
@@ -157,8 +159,8 @@ namespace Savi.Core.Services
                 };
             }
             wallet.Balance += amount;
-            wallet.ModifiedAt = DateTime.UtcNow;                
-            
+            wallet.ModifiedAt = DateTime.UtcNow;
+
             unitOfWork.WalletRepository.UpdateAsync(wallet);
             unitOfWork.SaveChanges();
             return new ResponseDto<Wallet>
@@ -169,7 +171,34 @@ namespace Savi.Core.Services
             };
         }
 
-    }
+        public async Task<ResponseDto<decimal>> GetTotalCustomerWalletBalanceAsync()
+        {
+            try
+            {
+                var totalBalance = unitOfWork.WalletRepository.GetAll().Sum(w => w.Balance);
 
+                return new ResponseDto<decimal>
+                {
+                    StatusCode = 200,
+                    DisplayMessage = "Total wallet balance retrieved successfully.",
+                    Result = totalBalance
+                };
+            }
+            catch (Exception ex)
+            {
+                
+                _logger.LogError(ex, "Error occurred while retrieving total wallet balance.");
+
+                
+                return new ResponseDto<decimal>
+                {
+                    StatusCode = 500,
+                    DisplayMessage = "An error occurred while retrieving total wallet balance.",
+                    Result = 0 
+                };
+            }
+
+        }
+    }
 }
 

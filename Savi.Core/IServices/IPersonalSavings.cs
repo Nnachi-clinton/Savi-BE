@@ -9,5 +9,6 @@ namespace Savi.Core.IServices
         Task<ResponseDto<List<Saving>>> Get_ListOf_All_UserTargets(string UserId);
         Task<ResponseDto<Saving>> GetPersonalSavingsById(string personalSavingsId);
         Task<ResponseDto<decimal>> GetTotalGoalAmountByUser(string userId);
+        public  Task<ResponseDto<int>> GetPersonalFundsCount();
     }
 }

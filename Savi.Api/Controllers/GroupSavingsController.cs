@@ -100,6 +100,24 @@ namespace Savi.Api.Controllers
             var response = await _groupSavings.CreateSavingsGroup(groupDTO);
             return Ok(response);
         }
-    }    
-    
-}    
+
+        [HttpGet("TotalSavingsGroupCount")]
+        public async Task<IActionResult> GetTotalSavingsGroupCountAsync()
+        {
+            try
+            {
+                var response = await _groupSavings.GetTotalSavingsGroupCountAsync();
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto<int>
+                {
+                    DisplayMessage = ex.Message,
+                    StatusCode = StatusCodes.Status500InternalServerError
+                });
+            }
+        }
+
+    }
+}
