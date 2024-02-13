@@ -22,7 +22,7 @@ namespace Savi.Api.Controllers
         }
 
         [HttpGet("ExploreGroups")]
-        public IActionResult GetExploreGroupSavingGroups()
+        public IActionResult GetAllExploreGroupSavingGroups()
         {
             var response = _groupSavings.GetExploreGroupSavingGroups();
 
@@ -64,7 +64,7 @@ namespace Savi.Api.Controllers
         }
 
         [HttpGet("GroupSavingsDetails")]
-        public IActionResult GetGroupSavingAccountDetails(string groupId)
+        public IActionResult GetActiveGroupSavingAccountDetails(string groupId)
         {
             var response = _groupSavings.GetGroupSavingAccountDetails(groupId);
 
@@ -75,21 +75,6 @@ namespace Savi.Api.Controllers
                 500 => StatusCode(500, response),
                 _ => BadRequest(response)
 
-            };
-
-
-        }
-        [HttpGet("ActiveGroups")]
-        public IActionResult GetActiveGroupSavingsGroups()
-        {
-            var response = _groupSavings.GetListOfActiveSavingsGroups();
-
-            return response.StatusCode switch
-            {
-                200 => Ok(response),
-                404 => NotFound(response),
-                500 => StatusCode(500, response),
-                _ => BadRequest(response)
             };
         }
 
@@ -110,6 +95,26 @@ namespace Savi.Api.Controllers
             }
             return BadRequest(response);
         }
+
+        [HttpGet("TotalSavingsGroupCount")]
+        public async Task<IActionResult> GetTotalSavingsGroupCountAsync()
+        {
+            try
+            {
+                var response = await _groupSavings.GetTotalSavingsGroupCountAsync();
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto<int>
+                {
+                    DisplayMessage = ex.Message,
+                    StatusCode = StatusCodes.Status500InternalServerError
+                });
+            }
+        }
     }    
     
 }    
+        
+

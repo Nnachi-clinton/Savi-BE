@@ -37,7 +37,7 @@ namespace Savi.Api.Extensions
             services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<SaviDbContext>()
             .AddDefaultTokenProviders();
-            
+            services.AddScoped<IAdminService, AdminService>();
             services.AddDbContext<SaviDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPersonalSavings, PersonalSavings>();

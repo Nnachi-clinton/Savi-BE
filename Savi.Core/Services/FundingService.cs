@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Savi.Core.IServices;
 using Savi.Data.Context;
+using Savi.Data.Repositories.Implementation;
 using Savi.Data.Repositories.Interface;
 using Savi.Data.UnitOfWork;
 using Savi.Model.Entities;
+using Savi.Model.Enums;
 namespace Savi.Core.Services
 {
     public class FundingService : IFundingService
@@ -189,7 +192,10 @@ namespace Savi.Core.Services
                 _logger.LogError($"Error crediting wallet {walletId}: {ex}");
                 throw;
             }
+
+           
         }
+       
 
     }
 

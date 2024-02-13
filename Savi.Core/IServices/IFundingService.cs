@@ -8,5 +8,6 @@
         public Task<bool> DebitPersonalTarget(string walletId, string savingsGoalId, decimal amount);
         public Task<bool> CreditWallet(string walletId, decimal amount);
         public Task<bool> DebitSavingsGoal(string savingsGoalId, decimal amount);
+        
     }
 }

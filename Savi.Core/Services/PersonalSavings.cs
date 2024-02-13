@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Data.Repositories.Interface;
@@ -12,12 +13,14 @@ namespace Savi.Core.Services
         private readonly ISavingRepository _savingRepository;
         private readonly ICloudinaryServices<Saving> _cloudinaryServices;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PersonalSavings(ISavingRepository savingRepository, ICloudinaryServices<Saving> cloudinaryServices, IMapper mapper)
+        public PersonalSavings(ISavingRepository savingRepository, ICloudinaryServices<Saving> cloudinaryServices, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _savingRepository = savingRepository;
             _cloudinaryServices = cloudinaryServices;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResponseDto<string>> SetPersonal_Savings_Target(PersonalSavingsDTO saving, string userId)
@@ -58,7 +61,7 @@ namespace Savi.Core.Services
                 var newTarget = await _savingRepository.CreateSavings(personalSaving);
                 var goalUrl = await _cloudinaryServices.UploadImage(personalSaving.Id, saving.GoalUrl);
                 personalSaving.GoalUrl = goalUrl;
-                 _savingRepository.UpdateAsync(personalSaving);
+                _savingRepository.UpdateAsync(personalSaving);
                 await _savingRepository.SaveChangesAsync();
                 if (newTarget)
                 {
@@ -94,7 +97,7 @@ namespace Savi.Core.Services
             response.DisplayMessage = "Success";
             response.Result = result;
             response.StatusCode = statusCode;
-        }    
+        }
         private static void SetNotFoundResponse<T>(ResponseDto<T> response, string errorMessage, int statusCode)
         {
             response.DisplayMessage = "Failed";
@@ -104,7 +107,7 @@ namespace Savi.Core.Services
         private static void SetErrorResponse<T>(ResponseDto<T> response, string errorMessage, int statusCode)
         {
             response.DisplayMessage = "Failed";
-            response.Result = default(T); 
+            response.Result = default(T);
             response.StatusCode = statusCode;
         }
         public async Task<ResponseDto<List<Saving>>> Get_ListOf_All_UserTargets(string userId)
@@ -183,8 +186,42 @@ namespace Savi.Core.Services
             return response;
         }
 
+
+        public async Task<ResponseDto<int>> GetPersonalFundsCount()
+        {
+            var response = new ResponseDto<int>();
+            int count = 0;
+            try
+            {
+                var result =  _unitOfWork.WalletFundingRepository.GetAll();
+                foreach (var item in result) 
+                {
+                    if (item.TransactionType == TransactionType.Debit)
+                        count += 1;
+                }
+                //if (count <= 0)
+                //{
+                //    return new ResponseDto<int>()
+                //    {
+                //        DisplayMessage = "0 personal group credited so far",
+                //        Result = 0,
+                //        StatusCode = 200
+                //    };
+                //}
+                return new ResponseDto<int>()
+                {
+                    DisplayMessage = $"{count} personal group credited so far",
+                    Result = count,
+                    StatusCode = 200
+                };
+            }
+            catch (Exception ex)
+            {              
+                SetErrorResponse(response, ex.Message, 500);
+            }
+            return response;
+        }
     }
+ }
 
-
-}
 

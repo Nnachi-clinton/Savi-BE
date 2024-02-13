@@ -65,5 +65,19 @@ namespace Savi.Api.Controllers
                 _ => BadRequest(response),
             };
         }
+
+        [HttpGet("totalPersonalFundCount")]
+        public async Task<IActionResult> GetPersonalFundsCount()
+        {
+            var response = await _personalSavings.GetPersonalFundsCount();
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                _ => BadRequest(response),
+            };
+        }
     }
+
 }

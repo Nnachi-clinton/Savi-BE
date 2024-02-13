@@ -143,47 +143,6 @@ namespace Savi.Core.Services
                 };
             }
         }
-        public ResponseDto<List<GroupDTO>> GetListOfActiveSavingsGroups()
-        {
-            var response = new ResponseDto<List<GroupDTO>>();
-
-            try
-            {
-                //var activeGroupSavingGroups = _unitOfWork.GroupRepository.GetAll();
-                //var ongoingGroups = activeGroupSavingGroups.Where(groupDto => groupDto.GroupStatus == GroupStatus.OnGoing).ToList();
-                var ongoingGroups = _unitOfWork.GroupRepository.GetAll(groupDto => groupDto.GroupStatus == GroupStatus.OnGoing);
-
-                if (ongoingGroups.Count > 0)
-                {
-                    var mappedOngoingGroups = _IMapper.Map<List<GroupDTO>>(ongoingGroups);
-                    return new ResponseDto<List<GroupDTO>>()
-                    {
-                        DisplayMessage = "Success",
-                        Result = mappedOngoingGroups,
-                        StatusCode = 200
-                    };
-                }
-
-                else
-                {
-                    return new ResponseDto<List<GroupDTO>>()
-                    {
-                        DisplayMessage = "No Active savings group accounts found",
-                        Result = null,
-                        StatusCode = 404
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new ResponseDto<List<GroupDTO>>()
-                {
-                    DisplayMessage = $"{ex.Message}",
-                    Result = null,
-                    StatusCode = 500
-                };
-            }
-        }
 
         public async Task<ResponseDto<string>> CreateSavingsGroup(GroupDTO2 dto)
         {
@@ -240,7 +199,15 @@ namespace Savi.Core.Services
             }
         }
 
-        
+        public ResponseDto<List<GroupDTO>> GetListOfActiveSavingsGroups()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ResponseDto<int>> GetTotalSavingsGroupCountAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
     
