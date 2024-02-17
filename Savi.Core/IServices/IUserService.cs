@@ -11,5 +11,6 @@ namespace Savi.Core.IServices
     public interface IUserService
     {
         Task<ApiResponse<AppUserDto>> GetUserByIdAsync(string userId);
+        ResponseDto<int> NewUserCountAsync();
     }
 }

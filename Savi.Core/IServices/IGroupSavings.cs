@@ -17,5 +17,8 @@ namespace Savi.Core.IServices
         ResponseDto<List<GroupDTO>> GetListOfActiveSavingsGroups();
         Task<ResponseDto<string>> CreateSavingsGroup(GroupDTO2 dto);
         Task<ResponseDto<int>> GetTotalSavingsGroupCountAsync();
+        ResponseDto<int> GetNewGroupCount();
+        ResponseDto<List<GroupDTO>> GetAllGroups();
+        ResponseDto<List<GroupDTO>> GetGroupsCreatedToday();
     }
 }

@@ -29,5 +29,18 @@ namespace Savi.Api.Controllers
 
             return StatusCode(response.StatusCode, new { errors = response.Errors });
         }
+
+        [HttpGet("NewRegisteredUserCount")]
+        public IActionResult NewRegisteredUserCount()
+        {
+            var response =  _userService.NewUserCountAsync();
+
+            if (response.StatusCode == 200)
+            {
+                return Ok(response.Result);
+            }
+
+            return BadRequest(response.StatusCode);
+        }
     }
 }

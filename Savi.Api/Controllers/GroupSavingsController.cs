@@ -113,6 +113,27 @@ namespace Savi.Api.Controllers
                 });
             }
         }
+
+        [HttpGet("GetAllGroups")]
+        public IActionResult GetAllGroups()
+        {
+            var response = _groupSavings.GetAllGroups();
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                500 => StatusCode(500, response),
+                _ => BadRequest(response)
+            };
+        }
+
+        [HttpGet("GetNewGroupCount")]
+        public IActionResult GetNewGroupCount()
+        {
+            var response = _groupSavings.GetNewGroupCount();
+            return Ok(response);
+        }
     }    
     
 }    

@@ -208,6 +208,111 @@ namespace Savi.Core.Services
         {
             throw new NotImplementedException();
         }
+        public ResponseDto<int> GetNewGroupCount()
+        {
+            try
+            {
+                var allGroups = _unitOfWork.GroupRepository.GetAll();
+                var newGroups = new List<Group>();
+                foreach (var group in allGroups)
+                {
+                    if (group.CreatedAt.Date == DateTime.Today.Date)
+                    {
+                        newGroups.Add(group);
+                    }
+                }
+                return new ResponseDto<int>
+                {
+                    DisplayMessage = $"{newGroups.Count} created today",
+                    StatusCode = 200,
+                    Result = newGroups.Count,
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new ResponseDto<int>
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    StatusCode = 500,
+                };
+            }
+        }
+        public ResponseDto<List<GroupDTO>> GetAllGroups()
+        {
+            try
+            {
+                var exploreGroupSavingGroups = _unitOfWork.GroupRepository.GetAll();
+                if (exploreGroupSavingGroups.Count > 0)
+                {
+                    var mappedGroups = _IMapper.Map<List<GroupDTO>>(exploreGroupSavingGroups);
+                    return new ResponseDto<List<GroupDTO>>()
+                    {
+                        DisplayMessage = "Success",
+                        Result = mappedGroups,
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ResponseDto<List<GroupDTO>>()
+                    {
+                        DisplayMessage = "No Groups Created",
+                        Result = null,
+                        StatusCode = 404
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<List<GroupDTO>>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+        }
+        public ResponseDto<List<GroupDTO>> GetGroupsCreatedToday()
+        {
+            var response = new ResponseDto<List<GroupDTO>>();
+
+            try
+            {
+                var waitingGroups = _unitOfWork.GroupRepository.GetAll(groupDto => groupDto.CreatedAt.Date == DateTime.Today.Date);
+
+                if (waitingGroups.Count > 0)
+                {
+                    var mappedGroups = _IMapper.Map<List<GroupDTO>>(waitingGroups);
+                    return new ResponseDto<List<GroupDTO>>()
+                    {
+                        DisplayMessage = "Success",
+                        Result = mappedGroups,
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ResponseDto<List<GroupDTO>>()
+                    {
+                        DisplayMessage = "No explore savings group accounts found",
+                        Result = null,
+                        StatusCode = 404
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<List<GroupDTO>>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+        }
+
+
     }
 }
     
