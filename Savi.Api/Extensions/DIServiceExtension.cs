@@ -69,6 +69,7 @@ namespace Savi.Api.Extensions
             services.AddHangfire(confi => confi.UseSqlServerStorage(config.GetConnectionString("DefaultConnection")));
             services.AddHangfireServer();
             services.AddScoped<IAutoSaveBackgroundService,AutoSaveBackgroundService>();
+            services.AddScoped<IFundingAnalyticsBackgroundServices, FundingAnalyticsBackgroundServices>();
             services.AddScoped<IGroupSavingsMembersServices, GroupSavingsMembersServices>();
             services.AddScoped<IGroupSavingsMembersRepository, GroupSavingsMembersRepository>();
 

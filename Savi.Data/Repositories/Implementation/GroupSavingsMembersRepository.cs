@@ -103,7 +103,20 @@ namespace Savi.Data.Repositories.Implementation
         {
             return await _saviDbContext.Set<GroupSavingsMembers>().FirstOrDefaultAsync(expression);
         }
+        public async Task<int> GetNextPositionToPay(string GroupId)
+        {
+            var nextPosition = await _saviDbContext.GroupSavingsMembers
+           .Where(m => m.GroupSavingsId == GroupId && !m.IsPaid)
+           .OrderBy(m => m.Positions)
+           .Select(m => m.Positions)
+           .FirstOrDefaultAsync();
 
+            return nextPosition;
+        }
+        //public async Task<GroupSavingsMembers> GetMemberByPosition(Expression<Func<GroupSavingsMembers, bool>> expression)
+        //{
+        //    return await 
+        //}
 
     }
 }

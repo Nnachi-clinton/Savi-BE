@@ -16,12 +16,14 @@ namespace Savi.Core.Services
 
         public async Task CheckAndExecuteAutoSaveTask()
         {
-            var saving = _dbContext.Savings.FirstOrDefault() ?? throw new Exception("No saving record found");
+            var saving = _dbContext.Savings.FirstOrDefault();
+            ArgumentNullException.ThrowIfNull(nameof(saving));
             if (!saving.AutoSave)
             {
                 return;
             }
-            var wallet = _dbContext.Wallets.FirstOrDefault(w => w.AppUserId == saving.UserId) ?? throw new Exception("Wallet not found for the user");
+            var wallet = _dbContext.Wallets.FirstOrDefault(w => w.AppUserId == saving.UserId);
+            ArgumentNullException.ThrowIfNull(nameof(wallet));
             if (saving.AmountSaved >= saving.TargetAmount)
             {
                 throw new Exception("Target already achieved");

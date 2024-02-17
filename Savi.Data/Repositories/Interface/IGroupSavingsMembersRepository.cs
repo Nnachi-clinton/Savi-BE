@@ -13,5 +13,6 @@ namespace Savi.Data.Repositories.Interface
         Task<bool> CreateSavingsGroupMembersAsync(GroupSavingsMembers groupSavingsMembers);
         List<GroupSavingsMembers> FindAsync(Expression<Func<GroupSavingsMembers, bool>> expression);
         Task<GroupSavingsMembers> FindAsync2(Expression<Func<GroupSavingsMembers, bool>> expression);
+        Task<int> GetNextPositionToPay(string GroupId);
     }
 }
