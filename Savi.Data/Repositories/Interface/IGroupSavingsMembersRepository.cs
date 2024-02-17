@@ -14,5 +14,7 @@ namespace Savi.Data.Repositories.Interface
         List<GroupSavingsMembers> FindAsync(Expression<Func<GroupSavingsMembers, bool>> expression);
         Task<GroupSavingsMembers> FindAsync2(Expression<Func<GroupSavingsMembers, bool>> expression);
         Task<int> GetNextPositionToPay(string GroupId);
+        void UpdateGroupSavingsMember(GroupSavingsMembers groupSavingMembers);
+        Task<int> GetTotalPositionsInGroup(string groupId);
     }
 }

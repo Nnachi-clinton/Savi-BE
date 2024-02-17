@@ -84,6 +84,10 @@ namespace Savi.Api
                 "swc-funding-analytics",
                 x => x.SWCFunding(),
                 "0 2 * * *");
+            RecurringJob.AddOrUpdate<IAutoGroupFundingBackgroundService>(
+                "auto-group-save",
+                x => x.AutoGroup(),
+                "0 09 * * *");
             app.MapControllers();
 
             app.Run();

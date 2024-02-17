@@ -113,10 +113,16 @@ namespace Savi.Data.Repositories.Implementation
 
             return nextPosition;
         }
-        //public async Task<GroupSavingsMembers> GetMemberByPosition(Expression<Func<GroupSavingsMembers, bool>> expression)
-        //{
-        //    return await 
-        //}
-
+        public async Task<int> GetTotalPositionsInGroup(string groupId)
+        {
+            return await _saviDbContext.GroupSavingsMembers
+                .Where(x => x.GroupSavingsId == groupId)
+                .Select(x => x.Positions)
+                .MaxAsync(); 
+        }
+        public void UpdateGroupSavingsMember(GroupSavingsMembers groupSavingMembers)
+        {
+            _saviDbContext.GroupSavingsMembers.Update(groupSavingMembers);
+        }
     }
 }

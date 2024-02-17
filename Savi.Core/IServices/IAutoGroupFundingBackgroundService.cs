@@ -2,5 +2,6 @@
 {
     public interface IAutoGroupFundingBackgroundService
     {
+        Task<bool> AutoGroup();
     }
 }

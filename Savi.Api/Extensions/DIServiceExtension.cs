@@ -70,6 +70,7 @@ namespace Savi.Api.Extensions
             services.AddHangfireServer();
             services.AddScoped<IAutoSaveBackgroundService,AutoSaveBackgroundService>();
             services.AddScoped<IFundingAnalyticsBackgroundServices, FundingAnalyticsBackgroundServices>();
+            services.AddScoped<IAutoGroupFundingBackgroundService, AutoGroupFundingBackgroundService>();
             services.AddScoped<IGroupSavingsMembersServices, GroupSavingsMembersServices>();
             services.AddScoped<IGroupSavingsMembersRepository, GroupSavingsMembersRepository>();
 
