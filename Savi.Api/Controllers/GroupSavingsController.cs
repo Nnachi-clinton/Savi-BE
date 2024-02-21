@@ -134,6 +134,12 @@ namespace Savi.Api.Controllers
             var response = _groupSavings.GetNewGroupCount();
             return Ok(response);
         }
+        [HttpGet("GetGroupsCreatedToday")]
+        public IActionResult GetGroupsCreatedToday()
+        {
+            var response = _groupSavings.GetGroupsCreatedToday();
+            return Ok(response);
+        }
     }    
     
 }    

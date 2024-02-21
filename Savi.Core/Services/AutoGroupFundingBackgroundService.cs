@@ -43,9 +43,9 @@ namespace Savi.Core.Services
                     var MembersToDebit = _groupSavingsMembersRepository.FindAsync(x => x.GroupSavingsId == group.Id && x.Positions != postionToCredit);
                     foreach (var wallet in MembersToDebit)
                     {
-                        await DebitUsersAsync(wallet.UserId, group.ContributionAmount);
+                        await DebitUsersAsync(wallet.UserId, group.ContributionAmount, group.Id);
                     }
-                    await CreditUserAsync(memberToCredit.UserId, amountToBeCredited);
+                    await CreditUserAsync(memberToCredit.UserId, amountToBeCredited, group.Id);
                     var totalPositionsInGroup = await _groupSavingsMembersRepository.GetTotalPositionsInGroup(group.Id);
                     var isLastMember = postionToCredit == totalPositionsInGroup;
                     if (!isLastMember)
@@ -72,7 +72,7 @@ namespace Savi.Core.Services
                 throw;
             }
         }
-        private async Task CreditUserAsync(string userId, decimal amount)
+        private async Task CreditUserAsync(string userId, decimal amount, string groupId)
         {
             var userWallet = await _saviDbContext.Wallets.FirstOrDefaultAsync(w => w.AppUserId == userId);
             var memberToCredit = await _groupSavingsMembersRepository.FindAsync2(x => x.UserId == userId);
@@ -81,18 +81,17 @@ namespace Savi.Core.Services
              _unitOfWork.WalletRepository.UpdateAsync(userWallet);
             memberToCredit.IsPaid = true;
             _groupSavingsMembersRepository.UpdateGroupSavingsMember(memberToCredit);
-            var walletFunding = new WalletFunding()
+            var groupTransaction = new GroupTransaction()
             {
-                FundAmount = amount,
+                Amount = amount,
                 TransactionType = TransactionType.Credit,
-                CumulativeAmount = userWallet.Balance,
-                WalletNumber = userWallet.WalletNumber,
-                WalletId = userWallet.Id,
+                AppUserId = userId,
+                GroupId = groupId,
             };
-            await _unitOfWork.WalletFundingRepository.AddWalletFundingAsync(walletFunding);
+            await _unitOfWork.GroupTransactionRepository.AddAsync(groupTransaction);
             _unitOfWork.SaveChanges();
         }
-        private async Task DebitUsersAsync(string userId, decimal amount)
+        private async Task DebitUsersAsync(string userId, decimal amount, string groupId)
         {
             var userWallet = await _saviDbContext.Wallets.FirstOrDefaultAsync(w => w.AppUserId == userId);
             ArgumentNullException.ThrowIfNull(nameof(userWallet));
@@ -100,15 +99,14 @@ namespace Savi.Core.Services
             {
                 userWallet.Balance -= amount;
                 _unitOfWork.WalletRepository.UpdateAsync(userWallet);
-                var walletFunding = new WalletFunding()
+                var groupTransaction = new GroupTransaction()
                 {
-                    FundAmount = amount,
+                    Amount = amount,
                     TransactionType = TransactionType.Debit,
-                    CumulativeAmount = userWallet.Balance,
-                    WalletNumber = userWallet.WalletNumber,
-                    WalletId = userWallet.Id,
+                    AppUserId =userId,
+                    GroupId=groupId,
                 };
-                await _unitOfWork.WalletFundingRepository.AddWalletFundingAsync(walletFunding);
+                await _unitOfWork.GroupTransactionRepository.AddAsync(groupTransaction);
                 _unitOfWork.SaveChanges();
             }
             else

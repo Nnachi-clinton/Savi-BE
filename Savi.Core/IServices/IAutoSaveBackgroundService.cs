@@ -2,6 +2,6 @@
 {
     public interface IAutoSaveBackgroundService
     {
-        public Task CheckAndExecuteAutoSaveTask();
+        public Task<bool> CheckAndExecuteAutoSaveTask();
     }
 }

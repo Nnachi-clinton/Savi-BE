@@ -1,5 +1,8 @@
-﻿using Savi.Core.IServices;
+﻿using Microsoft.EntityFrameworkCore;
+using Savi.Core.IServices;
 using Savi.Data.Context;
+using Savi.Model.Entities;
+using Savi.Model.Enums;
 
 namespace Savi.Core.Services
 {
@@ -14,37 +17,61 @@ namespace Savi.Core.Services
             _fundingService = fundingService;
         }
 
-        public async Task CheckAndExecuteAutoSaveTask()
+        public async Task<bool> CheckAndExecuteAutoSaveTask()
         {
-            var saving = _dbContext.Savings.FirstOrDefault();
-            ArgumentNullException.ThrowIfNull(nameof(saving));
-            if (!saving.AutoSave)
+            var savings = await _dbContext.Savings.ToListAsync();
+            if (savings.Count ==0)
             {
-                return;
+                return false;
             }
-            var wallet = _dbContext.Wallets.FirstOrDefault(w => w.AppUserId == saving.UserId);
-            ArgumentNullException.ThrowIfNull(nameof(wallet));
-            if (saving.AmountSaved >= saving.TargetAmount)
+            var autoSavings = savings.Where(x=>x.AutoSave).ToList();
+            if (autoSavings.Count == 0)
             {
-                throw new Exception("Target already achieved");
+                return false;
             }
-            DateTime nextRuntime = saving.NextRuntime.Date;
-            DateTime currentUtcDate = DateTime.UtcNow.Date;
+            foreach (var saving in autoSavings)
+            {
+                var wallet = _dbContext.Wallets.FirstOrDefault(w => w.AppUserId == saving.UserId);
+                ArgumentNullException.ThrowIfNull(nameof(wallet));
+                if (saving.AmountSaved >= saving.TargetAmount)
+                {
+                    throw new Exception("Target already achieved");
+                }
+                DateTime nextRuntime = saving.NextRuntime.Date;
+                DateTime currentDate = DateTime.Now.Date;
 
-            int comparisonResult = nextRuntime.Date.CompareTo(currentUtcDate);
+                int comparisonResult = nextRuntime.Date.CompareTo(currentDate);
 
-            if (comparisonResult != 0)
-            {
-                return;
-            }           
-            var savingGoalId = saving.Id;
-            var amount = saving.AmountToAdd;
-            var walletId = wallet.Id;
-            var fundingServiceResult = await _fundingService.CreditPersonalTarget(walletId, savingGoalId, amount);
-            if (!fundingServiceResult)
-            {
-                throw new Exception("Auto-funding was not successful");
+                if (comparisonResult != 0)
+                {
+                    return false;
+                }
+                var savingGoalId = saving.Id;
+                var amount = saving.AmountToAdd;
+                var walletId = wallet.Id;
+                var fundingServiceResult = await _fundingService.CreditPersonalTarget(walletId, savingGoalId, amount);
+                if (!fundingServiceResult)
+                {
+                    throw new Exception("Auto-funding was not successful");
+                }
+                int multiplier;
+                switch (saving.FundFrequency)
+                {
+                    case FundFrequency.Daily:
+                        multiplier = 1;
+                        break;
+                    case FundFrequency.Weekly:
+                        multiplier = 7;
+                        break;
+                    default:
+                        multiplier = 31;
+                        break;
+                }
+                saving.NextRuntime = DateTime.Now.AddDays(multiplier);
+                _dbContext.Update(saving);
+                await _dbContext.SaveChangesAsync();
             }
+            return true;
         }
 
     }
