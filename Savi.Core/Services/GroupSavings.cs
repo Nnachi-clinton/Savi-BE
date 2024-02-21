@@ -150,6 +150,16 @@ namespace Savi.Core.Services
             {
                 var userExist = _saviDbContext.Users.FirstOrDefault(x => x.Id == dto.UserId);
                 ArgumentNullException.ThrowIfNull(nameof(userExist));
+                var nameExist = _saviDbContext.Groups.FirstOrDefault(x=> x.SaveName == dto.SaveName);
+                if (nameExist != null)
+                {
+                    return new ResponseDto<string>()
+                    {
+                        DisplayMessage = $"{nameExist.SaveName} already exist",
+                        StatusCode = 403,
+                        Result = null,
+                    };
+                }
                 var newGroupSavings = _IMapper.Map<Group>(dto);
                 newGroupSavings.MemberCount = 1;
                 newGroupSavings.MaxNumberOfParticipants = 5;
@@ -172,7 +182,7 @@ namespace Savi.Core.Services
                     _unitOfWork.SaveChanges();
                     if (res)
                     {
-                            return new ResponseDto<string>()
+                        return new ResponseDto<string>()
                         {
                             DisplayMessage = $"{result.SaveName} Group created successfully",
                             StatusCode = 200,
