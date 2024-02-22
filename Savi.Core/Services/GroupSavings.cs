@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Savi.Core.DTO;
 using Savi.Core.IServices;
 using Savi.Data.Context;
@@ -7,6 +8,7 @@ using Savi.Data.Repositories.Interface;
 using Savi.Model.Entities;
 using Savi.Model.Enums;
 using System;
+using static Google.Apis.Requests.BatchRequest;
 
 namespace Savi.Core.Services
 {
@@ -211,12 +213,63 @@ namespace Savi.Core.Services
 
         public ResponseDto<List<GroupDTO>> GetListOfActiveSavingsGroups()
         {
-            throw new NotImplementedException();
+            try
+            { 
+                var ongoingGroups = _unitOfWork.GroupRepository.GetAll(groupDto => groupDto.GroupStatus == GroupStatus.OnGoing);
+
+                if (ongoingGroups.Count > 0)
+                {
+                    var mappedActiveGroups = _IMapper.Map<List<GroupDTO>>(ongoingGroups);
+                    return new ResponseDto<List<GroupDTO>>()
+                    {
+                        DisplayMessage = "Success",
+                        Result = mappedActiveGroups,
+                        StatusCode = 200
+                    };
+                }
+                else
+                {
+                    return new ResponseDto<List<GroupDTO>>()
+                    {
+                        DisplayMessage = "No Active savings group found",
+                        Result = null,
+                        StatusCode = 404
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<List<GroupDTO>>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+
         }
 
-        public Task<ResponseDto<int>> GetTotalSavingsGroupCountAsync()
+        public ResponseDto<int> GetTotalSavingsGroupCountAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = _unitOfWork.SavingRepository.GetAll();
+                return new ResponseDto<int>()
+                {
+                    DisplayMessage = $"{result.Count} Personal group found",
+                    Result = result.Count,
+                    StatusCode = 200,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<int>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = 0,
+                    StatusCode = 200,
+                };
+            }
         }
         public ResponseDto<int> GetNewGroupCount()
         {

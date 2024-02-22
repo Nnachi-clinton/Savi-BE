@@ -21,10 +21,23 @@ namespace Savi.Api.Controllers
             _groupSavingsMembersServices = groupSavingsMembersServices;
         }
 
-        [HttpGet("ExploreGroups")]
+        [HttpGet("ListOfExploreGroups")]
         public IActionResult GetAllExploreGroupSavingGroups()
         {
             var response = _groupSavings.GetExploreGroupSavingGroups();
+
+            return response.StatusCode switch
+            {
+                200 => Ok(response),
+                404 => NotFound(response),
+                500 => StatusCode(500, response),
+                _ => BadRequest(response)
+            };
+        }
+        [HttpGet("ListOfActiveGroups")]
+        public IActionResult GetAllActiveGroupSavingGroups()
+        {
+            var response = _groupSavings.GetListOfActiveSavingsGroups();
 
             return response.StatusCode switch
             {
@@ -63,7 +76,7 @@ namespace Savi.Api.Controllers
 
         }
 
-        [HttpGet("GroupSavingsDetails")]
+        [HttpGet("ActiveGroupDetails")]
         public IActionResult GetActiveGroupSavingAccountDetails(string groupId)
         {
             var response = _groupSavings.GetGroupSavingAccountDetails(groupId);
@@ -97,11 +110,11 @@ namespace Savi.Api.Controllers
         }
 
         [HttpGet("TotalSavingsGroupCount")]
-        public async Task<IActionResult> GetTotalSavingsGroupCountAsync()
+        public IActionResult GetTotalSavingsGroupCountAsync()
         {
             try
             {
-                var response = await _groupSavings.GetTotalSavingsGroupCountAsync();
+                var response =  _groupSavings.GetTotalSavingsGroupCountAsync();
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
