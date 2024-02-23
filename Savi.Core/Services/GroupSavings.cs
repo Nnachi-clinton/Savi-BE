@@ -344,8 +344,6 @@ namespace Savi.Core.Services
             {
                 var waitingGroups = _unitOfWork.GroupRepository.GetAll(groupDto => groupDto.CreatedAt.Date == DateTime.Today.Date);
 
-                if (waitingGroups.Count > 0)
-                {
                     var mappedGroups = _IMapper.Map<List<GroupDTO>>(waitingGroups);
                     return new ResponseDto<List<GroupDTO>>()
                     {
@@ -353,16 +351,7 @@ namespace Savi.Core.Services
                         Result = mappedGroups,
                         StatusCode = 200
                     };
-                }
-                else
-                {
-                    return new ResponseDto<List<GroupDTO>>()
-                    {
-                        DisplayMessage = "No explore savings group accounts found",
-                        Result = null,
-                        StatusCode = 404
-                    };
-                }
+           
             }
             catch (Exception ex)
             {
@@ -374,7 +363,34 @@ namespace Savi.Core.Services
                 };
             }
         }
+        public ResponseDto<GroupDTO> GetGroupDetails(string groupId)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(groupId));
+            try
+            {
+                var group = _unitOfWork.GroupRepository.GetById(groupId);
+                ArgumentNullException.ThrowIfNull(group);
 
+                var mappedExploreGroup = _IMapper.Map<GroupDTO>(group);
+                return new ResponseDto<GroupDTO>()
+                {
+                    DisplayMessage = "Success",
+                    Result = mappedExploreGroup,
+                    StatusCode = 200
+                };
+                
+             
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<GroupDTO>()
+                {
+                    DisplayMessage = $"{ex.Message}",
+                    Result = null,
+                    StatusCode = 500
+                };
+            }
+        }
 
     }
 }

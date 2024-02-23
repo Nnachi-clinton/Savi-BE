@@ -20,5 +20,6 @@ namespace Savi.Core.IServices
         ResponseDto<int> GetNewGroupCount();
         ResponseDto<List<GroupDTO>> GetAllGroups();
         ResponseDto<List<GroupDTO>> GetGroupsCreatedToday();
+        ResponseDto<GroupDTO> GetGroupDetails(string groupId);
     }
 }
